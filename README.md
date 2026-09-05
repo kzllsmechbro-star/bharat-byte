@@ -192,7 +192,6 @@ bharat-byte/
 │       │   ├── LayerToggles.tsx         # HUD layer visibility toggles
 │       │   ├── Legend.tsx               # Color-coded cadastral status legend
 │       │   ├── LocalityBuildings.tsx    # Batched 3D locality buildings
-│       │   ├── ModularCityModel.tsx     # GLTF model loader
 │       │   ├── RoadNetwork.tsx          # Procedural roads and street markings
 │       │   ├── SatelliteTerrain.tsx     # Base terrain rendering
 │       │   ├── SearchBar.tsx            # Cadastral autocomplete search
@@ -217,8 +216,7 @@ bharat-byte/
 │   ├── city_model_plans.json    # Building plan configurations
 │   └── requirements.txt         # Backend Python dependencies
 ├── scripts/                      # Data pipeline scripts
-│   ├── convert_osm_to_kml.py    # OpenStreetMap to KML conversion utility
-│   └── export_city_map.py       # Blender to optimized GLTF/GLB export pipeline
+│   └── convert_osm_to_kml.py    # OpenStreetMap to KML conversion utility
 ├── seed-data/                    # Locality geographic datasets
 │   └── bengaluru_rr_nagar.kml   # Bengaluru Rajarajeshwari Nagar KML footprint
 ├── shared/                       # Cross-cutting specification documents
@@ -329,7 +327,7 @@ pytest tests/test_ulpin_engine.py -v
 
 ---
 
-## 🛠️ 3D Modeling & Geospatial Pipeline
+## 🛠️ Cadastral & Geospatial Data Pipeline
 
 ```
 OpenStreetMap (.osm)
@@ -337,16 +335,16 @@ OpenStreetMap (.osm)
        ▼ (scripts/convert_osm_to_kml.py)
 Google Earth KML (seed-data/bengaluru_rr_nagar.kml)
        │
-       ▼ (Blender GIS import)
-Source 3D Model (models/rrr.blend)
+       ▼ (Spatial Parsing & ULPIN Engine)
+Locality Cadastral Database (city_buildings_catalog.json)
        │
-       ▼ (scripts/export_city_map.py)
-Three.js Optimized GLB (frontend/public/modular_city_environment.glb)
+       ▼ (Three.js Extrusions & Procedural Architecture)
+Interactive 3D Cadastral Digital Twin
 ```
 
-To re-export the 3D model after modifications in Blender:
+To convert raw OpenStreetMap extracts into KML parcel boundaries:
 ```bash
-blender models/rrr.blend --background --python scripts/export_city_map.py
+python scripts/convert_osm_to_kml.py input.osm seed-data/bengaluru_rr_nagar.kml
 ```
 
 ---
