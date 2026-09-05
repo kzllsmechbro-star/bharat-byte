@@ -1,0 +1,347 @@
+[
+  {
+    "index": 1,
+    "name": "City Block B01 (Commercial Tower)",
+    "center": [
+      200.0,
+      162.3
+    ],
+    "width": 43.8,
+    "depth": 47.0,
+    "height": 87.5,
+    "floors": 25,
+    "building_type": "commercial_tower",
+    "model_min": [
+      1.125,
+      0.0,
+      -0.4454602003097534
+    ],
+    "model_max": [
+      2.875,
+      3.5,
+      1.4334156513214111
+    ]
+  },
+  {
+    "index": 2,
+    "name": "City Block B02 (Midrise Apartments)",
+    "center": [
+      275.0,
+      274.8
+    ],
+    "width": 47.0,
+    "depth": 43.8,
+    "height": 50.0,
+    "floors": 14,
+    "building_type": "midrise_apartments",
+    "model_min": [
+      4.060563564300537,
+      0.0,
+      4.118977069854736
+    ],
+    "model_max": [
+      5.939438819885254,
+      2.0,
+      5.868977069854736
+    ]
+  },
+  {
+    "index": 3,
+    "name": "City Block B03 (Office Complex)",
+    "center": [
+      212.5,
+      49.8
+    ],
+    "width": 47.0,
+    "depth": 43.8,
+    "height": 37.5,
+    "floors": 11,
+    "building_type": "office_complex",
+    "model_min": [
+      1.5605628490447998,
+      0.0,
+      -4.881022930145264
+    ],
+    "model_max": [
+      3.439438581466675,
+      1.5,
+      -3.1310229301452637
+    ]
+  },
+  {
+    "index": 4,
+    "name": "City Block B04 (Mixed Use Block)",
+    "center": [
+      287.5,
+      149.8
+    ],
+    "width": 18.8,
+    "depth": 47.0,
+    "height": 37.5,
+    "floors": 11,
+    "building_type": "mixed_use_block",
+    "model_min": [
+      5.125,
+      0.0,
+      -0.9454596042633057
+    ],
+    "model_max": [
+      5.875,
+      1.5,
+      0.9334155917167664
+    ]
+  },
+  {
+    "index": 5,
+    "name": "City Block B05 (Retail Plaza)",
+    "center": [
+      287.5,
+      99.8
+    ],
+    "width": 18.8,
+    "depth": 46.9,
+    "height": 25.0,
+    "floors": 7,
+    "building_type": "retail_plaza",
+    "model_min": [
+      5.125,
+      0.0,
+      -2.9435229301452637
+    ],
+    "model_max": [
+      5.875,
+      1.0,
+      -1.0685229301452637
+    ]
+  },
+  {
+    "index": 6,
+    "name": "City Block B06 (Civic Building)",
+    "center": [
+      175.0,
+      262.3
+    ],
+    "width": 46.9,
+    "depth": 18.8,
+    "height": 25.0,
+    "floors": 7,
+    "building_type": "civic_building",
+    "model_min": [
+      0.0625,
+      0.0,
+      4.118977069854736
+    ],
+    "model_max": [
+      1.9375,
+      1.0,
+      4.868977069854736
+    ]
+  },
+  {
+    "index": 7,
+    "name": "City Block B07 (Residential Block A)",
+    "center": [
+      62.5,
+      212.0
+    ],
+    "width": 18.8,
+    "depth": 19.5,
+    "height": 25.0,
+    "floors": 7,
+    "building_type": "residential_block_a",
+    "model_min": [
+      -3.875,
+      0.0,
+      2.0898265838623047
+    ],
+    "model_max": [
+      -3.125,
+      1.0,
+      2.8689770698547363
+    ]
+  },
+  {
+    "index": 8,
+    "name": "City Block B08 (Residential Block B)",
+    "center": [
+      62.5,
+      174.8
+    ],
+    "width": 18.8,
+    "depth": 46.9,
+    "height": 25.0,
+    "floors": 7,
+    "building_type": "residential_block_b",
+    "model_min": [
+      -3.875,
+      0.0,
+      0.05647695064544678
+    ],
+    "model_max": [
+      -3.125,
+      1.0,
+      1.9314769506454468
+    ]
+  },
+  {
+    "index": 9,
+    "name": "City Block B09 (Community Center)",
+    "center": [
+      287.5,
+      187.7
+    ],
+    "width": 18.8,
+    "depth": 19.5,
+    "height": 12.5,
+    "floors": 4,
+    "building_type": "community_center",
+    "model_min": [
+      5.125,
+      0.0,
+      1.1189769506454468
+    ],
+    "model_max": [
+      5.875,
+      0.5,
+      1.8981274366378784
+    ]
+  },
+  {
+    "index": 10,
+    "name": "City Block B10 (Transit Hub)",
+    "center": [
+      287.5,
+      225.2
+    ],
+    "width": 18.8,
+    "depth": 19.5,
+    "height": 12.5,
+    "floors": 4,
+    "building_type": "transit_hub",
+    "model_min": [
+      5.125,
+      0.0,
+      2.6189770698547363
+    ],
+    "model_max": [
+      5.875,
+      0.5,
+      3.398127555847168
+    ]
+  },
+  {
+    "index": 11,
+    "name": "City Block B11 (Commercial Annex)",
+    "center": [
+      125.0,
+      49.8
+    ],
+    "width": 18.8,
+    "depth": 46.9,
+    "height": 12.5,
+    "floors": 4,
+    "building_type": "commercial_annex",
+    "model_min": [
+      -1.375,
+      0.0,
+      -4.943522930145264
+    ],
+    "model_max": [
+      -0.625,
+      0.5,
+      -3.0685229301452637
+    ]
+  },
+  {
+    "index": 12,
+    "name": "City Block B12 (Urban Villa 1)",
+    "center": [
+      137.4,
+      262.4
+    ],
+    "width": 25.7,
+    "depth": 25.7,
+    "height": 10.4,
+    "floors": 3,
+    "building_type": "urban_villa_1",
+    "model_min": [
+      -1.0179535150527954,
+      -0.0015324503183364868,
+      3.9839770793914795
+    ],
+    "model_max": [
+      0.010000061243772507,
+      0.4127708971500397,
+      5.0119309425354
+    ]
+  },
+  {
+    "index": 13,
+    "name": "City Block B13 (Urban Villa 2)",
+    "center": [
+      212.5,
+      262.3
+    ],
+    "width": 25.5,
+    "depth": 25.5,
+    "height": 10.3,
+    "floors": 3,
+    "building_type": "urban_villa_2",
+    "model_min": [
+      1.9900000095367432,
+      -0.0011671371757984161,
+      3.9839770793914795
+    ],
+    "model_max": [
+      3.009999990463257,
+      0.4127708971500397,
+      5.003976821899414
+    ]
+  },
+  {
+    "index": 14,
+    "name": "City Block B14 (Townhouse 1)",
+    "center": [
+      137.5,
+      162.3
+    ],
+    "width": 17.5,
+    "depth": 17.5,
+    "height": 9.3,
+    "floors": 3,
+    "building_type": "townhouse_1",
+    "model_min": [
+      -0.8500001430511475,
+      0.0,
+      0.14397695660591125
+    ],
+    "model_max": [
+      -0.15000024437904358,
+      0.3730463683605194,
+      0.8439767360687256
+    ]
+  },
+  {
+    "index": 15,
+    "name": "City Block B15 (Townhouse 2)",
+    "center": [
+      37.5,
+      212.5
+    ],
+    "width": 17.5,
+    "depth": 17.5,
+    "height": 9.3,
+    "floors": 3,
+    "building_type": "townhouse_2",
+    "model_min": [
+      -4.850000381469727,
+      0.0,
+      2.1500000953674316
+    ],
+    "model_max": [
+      -4.150000095367432,
+      0.3730463683605194,
+      2.8499999046325684
+    ]
+  }
+]

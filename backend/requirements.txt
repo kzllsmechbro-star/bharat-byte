@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic
+python-dotenv
+# official Supabase Python client (repo name: supabase-py; PyPI package: supabase)
+supabase
+shapely
+pytest
