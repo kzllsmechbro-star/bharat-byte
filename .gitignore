@@ -30,9 +30,10 @@ Thumbs.db
 # 3D Model Assets & Blender files
 *.blend
 *.blend*
-*.glb
 *.gltf
 models/
+/modular_city_environment.glb
+!frontend/public/modular_city_environment.glb
 
 # Logs
 *.log

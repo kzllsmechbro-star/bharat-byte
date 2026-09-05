@@ -178,6 +178,7 @@ graph TD
 bharat-byte/
 ├── frontend/                     # React 18 + TypeScript + Vite + Three.js app
 │   ├── public/
+│   │   ├── modular_city_environment.glb  # 3D Bengaluru City Mesh (10.9 MB)
 │   │   ├── city_buildings_catalog.json   # 1,500+ building spatial catalog
 │   │   ├── favicon.svg
 │   │   └── icons.svg
@@ -192,6 +193,7 @@ bharat-byte/
 │       │   ├── LayerToggles.tsx         # HUD layer visibility toggles
 │       │   ├── Legend.tsx               # Color-coded cadastral status legend
 │       │   ├── LocalityBuildings.tsx    # Batched 3D locality buildings
+│       │   ├── ModularCityModel.tsx     # 3D city environment mesh renderer
 │       │   ├── RoadNetwork.tsx          # Procedural roads and street markings
 │       │   ├── SatelliteTerrain.tsx     # Base terrain rendering
 │       │   ├── SearchBar.tsx            # Cadastral autocomplete search

@@ -5,6 +5,7 @@ import { useRef } from 'react'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 
 import { LocalityBuildings } from '../components/LocalityBuildings'
+import { ModularCityModel } from '../components/ModularCityModel'
 import { SatelliteTerrain } from '../components/SatelliteTerrain'
 import { CameraController } from '../components/CameraController'
 import { useLocalityStore } from '../store/localityStore'
@@ -60,6 +61,7 @@ function SceneContent() {
         shadow-camera-bottom={-1200}
       />
       <SatelliteTerrain />
+      <ModularCityModel />
       <LocalityBuildings />
       <OrbitControls
         ref={controlsRef}
