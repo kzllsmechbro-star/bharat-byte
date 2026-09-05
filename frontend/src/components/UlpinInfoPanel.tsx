@@ -67,6 +67,30 @@ export function UlpinInfoPanel() {
       setFloors([])
       return
     }
+
+    // Immediately populate from building.floors if available in catalog
+    if (building?.floors && building.floors.length > 0) {
+      const immediateFloors = building.floors
+        .filter((f) => !f.floor_code.startsWith('F-U'))
+        .map((f) => ({
+          id: `${building.id}-${f.floor_code}`,
+          building_id: building.id,
+          floor_code: f.floor_code,
+          floor_number: f.floor_number,
+          is_underground: false,
+          footprint: building.footprint,
+          height_meters: f.height_meters || 3.5,
+        }))
+        .sort((a, b) => a.floor_number - b.floor_number)
+
+      setFloors(immediateFloors)
+      setIsLoadingFloors(false)
+      if (immediateFloors.length > 0) {
+        selectFloor(immediateFloors[0].id)
+      }
+      return
+    }
+
     setIsLoadingFloors(true)
     let isActive = true
     getBuildingFloors(selectedBuildingId)
@@ -76,7 +100,7 @@ export function UlpinInfoPanel() {
           setFloors(sorted)
           setIsLoadingFloors(false)
           // If no floor selected, auto-select first floor
-          if (!selectedFloorId && sorted.length > 0) {
+          if (sorted.length > 0) {
             selectFloor(sorted[0].id)
           }
         }
@@ -90,7 +114,7 @@ export function UlpinInfoPanel() {
     return () => {
       isActive = false
     }
-  }, [selectedBuildingId, selectFloor, selectedFloorId])
+  }, [selectedBuildingId, selectFloor, building])
 
   // 2. Fetch units when active floor changes
   useEffect(() => {

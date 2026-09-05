@@ -16,6 +16,25 @@ export interface Parcel {
 
 export type BuildingType = 'apartment' | 'house' | 'half_built' | 'school' | 'commercial'
 
+export interface RawCatalogUnit {
+  unit_code: string
+  full_ulpin: string
+  unit_number?: string | null
+  unit_type: string
+  elevation_meters?: [number, number] | null
+  volume_m3?: number | null
+  ai_morton_code?: string | null
+  spatial_verification_hash?: string | null
+}
+
+export interface RawCatalogFloor {
+  id?: string
+  floor_code: string
+  floor_number: number
+  height_meters?: number
+  units?: RawCatalogUnit[]
+}
+
 export interface Building {
   id: string
   parcel_id?: string | null
@@ -38,6 +57,7 @@ export interface Building {
   postal_address?: string | null
   total_units_count?: number | null
   created_at?: string | null
+  floors?: RawCatalogFloor[]
 }
 
 export interface Floor {

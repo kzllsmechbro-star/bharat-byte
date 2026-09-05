@@ -65,7 +65,22 @@ function PlannedFloorsGhost({
 }
 
 export function Building3D({ building }: { building: Building; index?: number }) {
-  const [floors, setFloors] = useState<Floor[]>([])
+  const [floors, setFloors] = useState<Floor[]>(() => {
+    if (building.floors && building.floors.length > 0) {
+      return building.floors
+        .filter((f) => !f.floor_code.startsWith('F-U'))
+        .map((f) => ({
+          id: `${building.id}-${f.floor_code}`,
+          building_id: building.id,
+          floor_code: f.floor_code,
+          floor_number: f.floor_number,
+          is_underground: false,
+          footprint: building.footprint,
+          height_meters: f.height_meters || 3.5,
+        }))
+    }
+    return []
+  })
 
   const selectedBuildingId = useLocalityStore((state) => state.selectedBuildingId)
   const selectedFloorId = useLocalityStore((state) => state.selectedFloorId)
