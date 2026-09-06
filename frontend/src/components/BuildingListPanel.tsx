@@ -75,29 +75,36 @@ export function BuildingListPanel() {
           </div>
 
           {/* Quick Filter Search inside Drawer */}
-          <div className="px-3 pt-2 pb-1">
+          <div style={{ padding: '0.5rem 0.75rem 0.25rem' }}>
             <input
               type="search"
-              className="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:border-sky-500 placeholder-slate-500"
+              style={{
+                width: '100%',
+                background: 'transparent',
+                border: '1px solid var(--border-line)',
+                color: 'var(--text-primary)',
+                fontSize: '0.75rem',
+                borderRadius: 'var(--radius)',
+                padding: '0.3rem 0.6rem',
+                outline: 'none',
+              }}
+              className="drawer-inner-search"
               placeholder="Filter by House #, Complex, or ULPIN..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
             />
 
-            {/* Category Filter Chips */}
-            <div className="flex gap-1 overflow-x-auto py-2 text-[11px] scrollbar-none">
+            {/* Category Filter Chips — same style as LayerToggles filter chips */}
+            <div style={{ display: 'flex', gap: '0.25rem', overflowX: 'auto', padding: '0.25rem 0', fontSize: '0.68rem' }}>
               {(['all', 'house', 'duplex', 'villa', 'apartment'] as const).map((cat) => (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-2 py-0.5 rounded capitalize whitespace-nowrap border transition-colors ${
-                    activeCategory === cat
-                      ? 'bg-sky-600 text-white border-sky-400 font-bold'
-                      : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-slate-200'
-                  }`}
+                  className={`filter-chip ${activeCategory === cat ? 'chip-active' : 'chip-inactive'}`}
+                  style={{ padding: '0.2rem 0.5rem', whiteSpace: 'nowrap', fontSize: '0.68rem' }}
                 >
-                  {cat === 'all' ? 'All' : cat === 'house' ? '🏠 1-St House' : cat === 'duplex' ? '🏡 Duplex' : cat === 'villa' ? '🏰 Villa' : '🏢 Apartment'}
+                  {cat === 'all' ? 'All' : cat === 'house' ? '🏠 1-St' : cat === 'duplex' ? '🏡 Duplex' : cat === 'villa' ? '🏰 Villa' : '🏢 Apt'}
                 </button>
               ))}
             </div>
@@ -134,11 +141,11 @@ export function BuildingListPanel() {
                   <div className="item-row-bottom">
                     <span className="bldg-ulpin-text">{building.base_ulpin}</span>
                     {building.complex_name && (
-                      <span className="text-[10px] text-slate-400 truncate max-w-[140px]">
+                      <span style={{ fontSize: '0.63rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px' }}>
                         {building.complex_name}
                       </span>
                     )}
-                    {isHidden && <span className="hidden-indicator">(Layer hidden)</span>}
+                    {isHidden && <span className="hidden-indicator">(hidden)</span>}
                   </div>
                 </button>
               )

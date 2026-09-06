@@ -38,7 +38,7 @@ function App() {
       {/* Top Center Search Header */}
       <header className="top-navigation-bar">
         <div className="branding-title">
-          <span className="badge-sih">SIH26011</span>
+          <span className="badge-sih">sih26011</span>
           <h1>3D ULPIN System</h1>
         </div>
         <SearchBar />

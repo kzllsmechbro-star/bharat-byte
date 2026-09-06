@@ -40,10 +40,12 @@ export function ModularCityModel() {
         void selectBuildingAtPoint(pt.x, pt.z)
       }}
       onPointerOver={() => {
-        document.body.style.cursor = 'pointer'
+        const canvas = document.querySelector('canvas') as HTMLCanvasElement | null
+        if (canvas) canvas.style.cursor = 'pointer'
       }}
       onPointerOut={() => {
-        document.body.style.cursor = 'auto'
+        const canvas = document.querySelector('canvas') as HTMLCanvasElement | null
+        if (canvas && !useLocalityStore.getState().isPanning) canvas.style.cursor = ''
       }}
     />
   )

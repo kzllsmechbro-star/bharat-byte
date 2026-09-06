@@ -136,12 +136,12 @@ export function subdividePolygon(
 
 export const getParcels = (): Promise<Parcel[]> => request(() => api.get<Parcel[]>('/parcels'))
 
-export const getBuildings = async (limit: number = 1500): Promise<Building[]> => {
+export const getBuildings = async (limit: number = 15000): Promise<Building[]> => {
   try {
     return await request(() => api.get<Building[]>('/buildings', { params: { limit } }))
   } catch {
     const catalog = await getLocalCatalog()
-    return catalog.slice(0, limit)
+    return catalog  // return full catalog — no slice — every building must be ULPIN-addressable
   }
 }
 

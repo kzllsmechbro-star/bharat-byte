@@ -30,6 +30,8 @@ interface LocalityState {
   cameraTarget: [number, number, number] | null
   cameraPosition: [number, number, number] | null
   cameraKey: number
+  /** True while a pan drag gesture is active — used to suppress building hover highlights. */
+  isPanning: boolean
 
   loadInitialData: () => Promise<void>
   selectBuilding: (id: string | null, defaultFloorId?: string | null) => void
@@ -46,6 +48,7 @@ interface LocalityState {
   flyToBuilding: (building: Building) => void
   flyToTarget: (target: [number, number, number], position?: [number, number, number]) => void
   resetCamera: () => void
+  setIsPanning: (panning: boolean) => void
 }
 
 export const useLocalityStore = create<LocalityState>((set, get) => ({
@@ -64,17 +67,18 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
   cameraTarget: null,
   cameraPosition: null,
   cameraKey: 0,
+  isPanning: false,
 
   loadInitialData: async () => {
     if (get().isLoading) return
     set({ isLoading: true, error: null })
     try {
       const [buildings, undergroundInfra] = await Promise.all([
-        getBuildings(1500).catch(async () => {
-          // Fallback to local catalog if backend unreachable
+        getBuildings(15000).catch(async () => {
+          // Fallback to local catalog if backend unreachable — load all buildings
           const res = await fetch('/city_buildings_catalog.json')
           const data = (await res.json()) as Building[]
-          return data.slice(0, 1500)
+          return data  // no slice — every building needs a ULPIN-addressable store entry
         }),
         getUndergroundInfra().catch(() => []),
       ])
@@ -223,4 +227,5 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
       cameraKey: state.cameraKey + 1,
     }))
   },
+  setIsPanning: (panning) => set({ isPanning: panning }),
 }))

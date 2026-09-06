@@ -9,6 +9,10 @@ import { Unit3D } from './Unit3D'
 import { useLocalityStore } from '../store/localityStore'
 import { createFootprintShape, getPolygonCenter, getPolygonRing } from './footprint'
 
+/** Returns the WebGL canvas — cursor state lives on the canvas, not document.body,
+ *  so it stays scoped to the 3D viewport and doesn't bleed onto HUD panels. */
+const getCanvas = () => document.querySelector('canvas') as HTMLCanvasElement | null
+
 function PlannedFloorsGhost({
   building,
   anchor,
@@ -43,10 +47,12 @@ function PlannedFloorsGhost({
               }}
               onPointerOver={(event) => {
                 event.stopPropagation()
-                document.body.style.cursor = 'pointer'
+                if (!useLocalityStore.getState().isPanning)
+                  getCanvas()?.style && (getCanvas()!.style.cursor = 'pointer')
               }}
               onPointerOut={() => {
-                document.body.style.cursor = 'auto'
+                if (!useLocalityStore.getState().isPanning)
+                  getCanvas()?.style && (getCanvas()!.style.cursor = '')
               }}
             >
               <shapeGeometry args={[shape]} />
@@ -87,11 +93,13 @@ export function Building3D({ building }: { building: Building; index?: number })
   const undergroundVisible = useLocalityStore((state) => state.undergroundVisible)
   const selectBuilding = useLocalityStore((state) => state.selectBuilding)
   const selectFloor = useLocalityStore((state) => state.selectFloor)
+  const isPanning = useLocalityStore((state) => state.isPanning)
 
   const isSelected = selectedBuildingId === building.id
   const hoveredBuildingId = useLocalityStore((state) => state.hoveredBuildingId)
   const isHovered = hoveredBuildingId === building.id
-  const isActive = isSelected || isHovered
+  // Suppress all hover/active decoration while a pan gesture is in progress
+  const isActive = !isPanning && (isSelected || isHovered)
 
   const anchor = useMemo(() => getPolygonCenter(building.footprint), [building.footprint])
   const position = useMemo(() => localXYToScene(anchor), [anchor])
@@ -267,10 +275,12 @@ export function Building3D({ building }: { building: Building; index?: number })
                   }}
                   onPointerOver={(event) => {
                     event.stopPropagation()
-                    document.body.style.cursor = 'pointer'
+                    if (!useLocalityStore.getState().isPanning)
+                      getCanvas()?.style && (getCanvas()!.style.cursor = 'pointer')
                   }}
                   onPointerOut={() => {
-                    document.body.style.cursor = 'auto'
+                    if (!useLocalityStore.getState().isPanning)
+                      getCanvas()?.style && (getCanvas()!.style.cursor = '')
                   }}
                 >
                   <shapeGeometry args={[footprintShape]} />
