@@ -105,7 +105,7 @@ def list_parcels() -> list[ParcelResponse]:
         ]
 
 
-def list_buildings(limit: int = 1500) -> list[BuildingResponse]:
+def list_buildings(limit: int = 15000) -> list[BuildingResponse]:
     """Return catalog of buildings with house numbers, story counts, and ULPINs."""
     catalog = _load_catalog()
     if catalog:
@@ -216,11 +216,10 @@ def get_unit(unit_id: str) -> UnitDetailResponse | None:
 
 
 def list_underground_infra() -> list[UndergroundInfraResponse]:
-    try:
-        rows = _client().table("underground_infra").select("*,parcels!inner(base_ulpin)").order("infra_type").execute().data
-        return [UndergroundInfraResponse.model_validate({**row, "base_ulpin": _parcel_base(row)}) for row in rows]
-    except Exception:
-        return []
+    """Return all underground segments and station nodes from the in-memory catalog."""
+    from app.services import underground_catalog  # local import avoids circular dep
+
+    return [UndergroundInfraResponse.model_validate(rec) for rec in underground_catalog.list_underground_infra()]
 
 
 def search_ulpin(query: str) -> list[SearchRecord]:

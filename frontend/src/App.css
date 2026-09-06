@@ -272,6 +272,54 @@ canvas { display: block; height: 100vh !important; width: 100vw !important; }
   border-color: rgba(94, 234, 212, 0.35);
 }
 
+/* ---------------- Underground Utilities Toggle (Eye Icon) ---------------- */
+.underground-toggle-btn {
+  position: fixed;
+  z-index: 10;
+  top: 3.55rem;       /* stacked below reset-camera (which is at top: 1rem) */
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-line);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--shadow-panel);
+  transition:
+    background 0.14s ease,
+    color 0.14s ease,
+    border-color 0.14s ease,
+    box-shadow 0.14s ease;
+  font-family: inherit;
+}
+
+.underground-toggle-btn:hover {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--text-primary);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+/* Active state: eye-open (underground ON) */
+.underground-toggle-btn.underground-toggle-active {
+  background: rgba(56, 189, 248, 0.18);
+  color: #7dd3fc;
+  border-color: rgba(56, 189, 248, 0.55);
+  box-shadow:
+    var(--shadow-panel),
+    0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+.underground-toggle-btn.underground-toggle-active:hover {
+  background: rgba(56, 189, 248, 0.28);
+  border-color: rgba(56, 189, 248, 0.75);
+}
+
 /* ---------------- ULPIN Info Panel (Top Left) ---------------- */
 .ulpin-info-panel {
   position: fixed;

@@ -28,7 +28,7 @@ def get_parcels() -> list[ParcelResponse]:
 
 
 @router.get("/buildings", response_model=list[BuildingResponse])
-def get_buildings(limit: int = 1500) -> list[BuildingResponse]:
+def get_buildings(limit: int = 15000) -> list[BuildingResponse]:
     return spatial_service.list_buildings(limit=limit)
 
 

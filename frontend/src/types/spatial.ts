@@ -113,6 +113,13 @@ export interface UndergroundInfra {
   path: GeoJsonGeometry
   full_ulpin: string
   depth_meters: number
+  /** Three.js scene-coordinate waypoints [x, y, z] — negative y = underground. */
+  waypoints?: [number, number, number][]
+  diameter_m?: number
+  material?: string
+  /** Assembled hierarchical ULPIN (only present for metro_station nodes). */
+  assembled_ulpin?: string
+  segment_name?: string
 }
 
 export type SearchRecordType = 'parcel' | 'building' | 'floor' | 'unit'

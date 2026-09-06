@@ -275,8 +275,15 @@ export const getUnit = async (unitId: string): Promise<UnitDetail> => {
   throw new ApiError('Unit not found', 404)
 }
 
-export const getUndergroundInfra = (): Promise<UndergroundInfra[]> =>
-  request(() => api.get<UndergroundInfra[]>('/underground'))
+export const getUndergroundInfra = async (): Promise<UndergroundInfra[]> => {
+  try {
+    return await request(() => api.get<UndergroundInfra[]>('/underground'))
+  } catch {
+    // Backend offline — load static catalog (always present in /public)
+    const res = await fetch('/underground_catalog.json')
+    return (await res.json()) as UndergroundInfra[]
+  }
+}
 
 export const searchUlpIn = async (ulpin: string): Promise<SearchResponse> => {
   try {

@@ -86,13 +86,20 @@ class UnitDetailResponse(UnitResponse):
 
 
 class UndergroundInfraResponse(BaseModel):
-    id: UUID | str
-    parcel_id: UUID | str
+    id: str
+    parcel_id: str | None = None
     base_ulpin: str
     infra_type: Literal["drainage", "metro_tunnel", "metro_station"]
     path: GeoJsonGeometry
     full_ulpin: str
     depth_meters: float
+    # ── 3D rendering fields (optional for backward-compat) ──────────────────
+    waypoints: list[list[float]] | None = None
+    diameter_m: float | None = None
+    material: str | None = None
+    assembled_ulpin: str | None = None
+    segment_name: str | None = None
+
 
 
 class SearchRecord(BaseModel):

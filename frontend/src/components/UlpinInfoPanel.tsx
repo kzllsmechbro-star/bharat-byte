@@ -202,36 +202,63 @@ export function UlpinInfoPanel() {
         <>
           <p className="panel-eyebrow">Subterranean Asset</p>
           <h2>
-            {selectedInfra.infra_type === 'drainage' && 'Stormwater / Sewage Culvert'}
-            {selectedInfra.infra_type === 'metro_tunnel' && 'Underground Metro Tunnel'}
-            {selectedInfra.infra_type === 'metro_station' && 'Subterranean Metro Station'}
+            {selectedInfra.segment_name ??
+              (selectedInfra.infra_type === 'drainage' && 'Stormwater / Sewage Culvert') ||
+              (selectedInfra.infra_type === 'metro_tunnel' && 'Underground Metro Tunnel') ||
+              (selectedInfra.infra_type === 'metro_station' && 'Subterranean Metro Station')}
           </h2>
-          <code className="full-ulpin">{selectedInfra.full_ulpin}</code>
+
+          {/* Show assembled ULPIN for stations; full_ulpin for others */}
+          <code className="full-ulpin">
+            {selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin}
+          </code>
           <button
-            className={`copy-ulpin ${copiedText === selectedInfra.full_ulpin ? 'copy-success' : ''}`}
+            className={`copy-ulpin ${copiedText === (selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin) ? 'copy-success' : ''}`}
             type="button"
             onClick={() => {
-              void copyText(selectedInfra.full_ulpin)
+              void copyText(selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin)
             }}
           >
-            {copiedText === selectedInfra.full_ulpin ? '✓ Copied to clipboard!' : '📋 Copy ULPIN'}
+            {copiedText === (selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin)
+              ? '✓ Copied to clipboard!'
+              : '📋 Copy ULPIN'}
           </button>
+
           <dl className="property-facts">
             <div>
               <dt>Asset Type</dt>
-              <dd>{selectedInfra.infra_type.replace('_', ' ')}</dd>
+              <dd>{selectedInfra.infra_type.replace(/_/g, ' ')}</dd>
             </div>
             <div>
               <dt>Depth</dt>
-              <dd>{selectedInfra.depth_meters} m Subterranean</dd>
+              <dd>{selectedInfra.depth_meters} m subterranean</dd>
             </div>
-            <div>
-              <dt>Right of Way</dt>
-              <dd>Road Corridor</dd>
-            </div>
+            {selectedInfra.diameter_m != null && (
+              <div>
+                <dt>Diameter / Bore</dt>
+                <dd>{selectedInfra.diameter_m} m</dd>
+              </div>
+            )}
+            {selectedInfra.material && (
+              <div>
+                <dt>Construction Material</dt>
+                <dd>{selectedInfra.material.replace(/_/g, ' ')}</dd>
+              </div>
+            )}
+            {selectedInfra.assembled_ulpin && (
+              <div>
+                <dt>Station ULPIN</dt>
+                <dd>
+                  <code style={{ fontSize: '0.65rem', wordBreak: 'break-all' }}>
+                    {selectedInfra.assembled_ulpin}
+                  </code>
+                </dd>
+              </div>
+            )}
           </dl>
+
           <div className="infra-parcel-ref">
-            <span>Aligned Base Parcel:</span>
+            <span>Base ULPIN:</span>
             <code>{selectedInfra.base_ulpin}</code>
           </div>
         </>

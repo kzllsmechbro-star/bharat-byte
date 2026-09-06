@@ -8,7 +8,9 @@ import { LocalityBuildings } from '../components/LocalityBuildings'
 import { ModularCityModel } from '../components/ModularCityModel'
 import { SatelliteTerrain } from '../components/SatelliteTerrain'
 import { CameraController } from '../components/CameraController'
+import { UndergroundLayer } from '../components/UndergroundLayer'
 import { useLocalityStore } from '../store/localityStore'
+
 
 function FpsMonitor() {
   const elapsed = useRef(0)
@@ -63,6 +65,8 @@ function SceneContent() {
       <SatelliteTerrain />
       <ModularCityModel />
       <LocalityBuildings />
+      <UndergroundLayer />
+
       <OrbitControls
         ref={controlsRef}
         makeDefault
