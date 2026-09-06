@@ -396,15 +396,26 @@ function UndergroundGeometry({ segments }: { segments: UndergroundInfra[] }) {
         )
       })}
 
-      {/* ── Ambient underground lighting ────────────────────────────────── */}
-      <ambientLight intensity={0.55} color="#1a2a3a" />
-      <pointLight
-        intensity={0.4}
-        distance={600}
-        decay={1.5}
-        color="#4488aa"
-        position={[0, -14, 0]}
+      {/* ── Ambient underground lighting ────────────────────────────── */}
+      <ambientLight intensity={1.1} color="#2a3a4a" />
+      <directionalLight
+        intensity={0.9}
+        color="#7ac8f0"
+        position={[200, 40, 200]}
       />
+      <pointLight
+        intensity={0.8}
+        distance={800}
+        decay={1.2}
+        color="#4488aa"
+        position={[0, -10, 0]}
+      />
+
+      {/* ── Bedrock floor at y=-22 so pipes have a visual backdrop ─── */}
+      <mesh position={[0, -22, 0]} rotation-x={-Math.PI / 2} receiveShadow={false}>
+        <planeGeometry args={[8000, 8000]} />
+        <meshStandardMaterial color="#0a0e14" roughness={1} metalness={0} />
+      </mesh>
     </>
   )
 }

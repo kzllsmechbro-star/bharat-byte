@@ -170,7 +170,26 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
       selectedInfra: null,
       underConstructionMessage: null,
     }),
-  toggleUnderground: () => set((state) => ({ undergroundVisible: !state.undergroundVisible })),
+  toggleUnderground: () => {
+    const { undergroundVisible } = get()
+    if (!undergroundVisible) {
+      // Turning ON: fly to a ground-level side view so underground pipes are visible
+      set((state) => ({
+        undergroundVisible: true,
+        cameraTarget:   [0, -12, 0],
+        cameraPosition: [320, 18, 380],
+        cameraKey: state.cameraKey + 1,
+      }))
+    } else {
+      // Turning OFF: reset to bird's eye overview
+      set((state) => ({
+        undergroundVisible: false,
+        cameraTarget:   [0, 0, 0],
+        cameraPosition: [550, 420, 550],
+        cameraKey: state.cameraKey + 1,
+      }))
+    }
+  },
   toggleBuildingType: (type) =>
     set((state) => ({
       visibleBuildingTypes: {
