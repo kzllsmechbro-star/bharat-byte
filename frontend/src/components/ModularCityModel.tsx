@@ -10,23 +10,28 @@ export function ModularCityModel() {
   const selectBuildingAtPoint = useLocalityStore((state) => state.selectBuildingAtPoint)
 
   useEffect(() => {
+    scene.visible = !undergroundVisible
+
+    // Ensure all materials are fully opaque and use depth writing for maximum performance
     scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh
-        mesh.castShadow = !undergroundVisible
-        mesh.receiveShadow = !undergroundVisible
+        mesh.castShadow = true
+        mesh.receiveShadow = true
 
         if (mesh.material) {
           const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
           materials.forEach((mat) => {
-            mat.transparent = undergroundVisible
-            mat.opacity = undergroundVisible ? 0.18 : 1.0
-            mat.depthWrite = !undergroundVisible
+            mat.transparent = false
+            mat.opacity = 1.0
+            mat.depthWrite = true
           })
         }
       }
     })
   }, [scene, undergroundVisible])
+
+  if (undergroundVisible) return null
 
   return (
     <primitive
@@ -34,7 +39,6 @@ export function ModularCityModel() {
       position={[0, 0, 0]}
       scale={[1, 1, 1]}
       onClick={(event: ThreeEvent<MouseEvent>) => {
-        // Intersect clicked coordinates with building bounding boxes
         event.stopPropagation()
         const pt = event.point
         void selectBuildingAtPoint(pt.x, pt.z)

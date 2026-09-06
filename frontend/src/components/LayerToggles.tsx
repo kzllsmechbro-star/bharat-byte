@@ -1,67 +1,122 @@
 import { useLocalityStore } from '../store/localityStore'
+import type { RightTab } from '../types/spatial'
 
-/**
- * Two stacked floating buttons (top-right):
- *  1. Reset Camera  — always present
- *  2. Eye toggle    — reveal / hide underground infrastructure layer
- */
+function ResetIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden="true">
+      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+    </svg>
+  )
+}
+
+function ItemIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+      <line x1="12" y1="22.08" x2="12" y2="12" />
+    </svg>
+  )
+}
+
+function ViewIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true">
+      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+      <circle cx="12" cy="13" r="3" />
+    </svg>
+  )
+}
+
+function LayersIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true">
+      <polygon points="12 2 2 7 12 12 22 7 12 2" />
+      <polyline points="2 17 12 22 22 17" />
+      <polyline points="2 12 12 17 22 12" />
+    </svg>
+  )
+}
+
 export function LayerToggles() {
-  const resetCamera        = useLocalityStore((s) => s.resetCamera)
+  const activeRightTab = useLocalityStore((s) => s.activeRightTab)
+  const setActiveRightTab = useLocalityStore((s) => s.setActiveRightTab)
   const undergroundVisible = useLocalityStore((s) => s.undergroundVisible)
-  const toggleUnderground  = useLocalityStore((s) => s.toggleUnderground)
+  const toggleUnderground = useLocalityStore((s) => s.toggleUnderground)
+  const resetCamera = useLocalityStore((s) => s.resetCamera)
+
+  const handleTabClick = (tab: RightTab) => {
+    if (activeRightTab === tab) {
+      setActiveRightTab(null)
+    } else {
+      setActiveRightTab(tab)
+      if (tab === 'underground' && !undergroundVisible) {
+        toggleUnderground()
+      }
+    }
+  }
+
+  // When underground view is active: hide all other buttons, showing ONLY the turn-off button
+  if (undergroundVisible) {
+    return (
+      <nav className="vertical-tab-bar classy-dual-tone underground-exit-bar" aria-label="Exit Underground View">
+        <button
+          type="button"
+          className="vtab vtab-active vtab-exit-underground"
+          onClick={toggleUnderground}
+          title="Turn off underground view (Return to city)"
+          aria-label="Turn off underground view"
+        >
+          <LayersIcon />
+        </button>
+      </nav>
+    )
+  }
 
   return (
-    <>
-      {/* ── Reset camera ──────────────────────────────────────────────── */}
+    <nav className="vertical-tab-bar classy-dual-tone" aria-label="Sidebar Navigation">
+      {/* ── Quick Reset Camera ────────────────────────────────────────── */}
       <button
         type="button"
-        className="reset-camera-floating-btn"
+        className="vtab-action-btn"
         onClick={resetCamera}
-        title="Reset 3D camera to overview"
-        aria-label="Reset camera to overview"
+        title="Reset camera view"
+        aria-label="Reset camera view"
       >
-        <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14" aria-hidden="true">
-          <path
-            fillRule="evenodd"
-            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-            clipRule="evenodd"
-          />
-        </svg>
-        Reset Camera
+        <ResetIcon />
       </button>
 
-      {/* ── Underground utilities toggle (eye icon) ────────────────────── */}
+      {/* ── Sidebar Tabs (Icon-Only) ──────────────────────────────────── */}
       <button
         type="button"
-        className={`underground-toggle-btn${undergroundVisible ? ' underground-toggle-active' : ''}`}
-        onClick={toggleUnderground}
-        title={undergroundVisible ? 'Hide underground infrastructure' : 'Reveal underground infrastructure'}
-        aria-label={undergroundVisible ? 'Hide underground layer' : 'Show underground layer'}
-        aria-pressed={undergroundVisible}
+        className={`vtab ${activeRightTab === 'item' ? 'vtab-active' : ''}`}
+        onClick={() => handleTabClick('item')}
+        title="ULPIN Item Inspector"
+        aria-label="ULPIN Item Inspector"
       >
-        {undergroundVisible ? (
-          /* Eye-open (layer visible) */
-          <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14" aria-hidden="true">
-            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-            <path
-              fillRule="evenodd"
-              d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-              clipRule="evenodd"
-            />
-          </svg>
-        ) : (
-          /* Eye-slash (layer hidden) */
-          <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14" aria-hidden="true">
-            <path
-              fillRule="evenodd"
-              d="M3.28 2.22a.75.75 0 00-1.06 1.06l14.5 14.5a.75.75 0 101.06-1.06l-1.745-1.745a10.029 10.029 0 003.3-4.38 1 1 0 000-.7C17.523 5.943 13.932 3 10 3a9.958 9.958 0 00-4.512 1.074L3.28 2.22zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"
-              clipRule="evenodd"
-            />
-            <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10a1 1 0 000 .7C1.732 14.057 5.522 17 10 17c1.347 0 2.638-.27 3.819-.76l-1.365-1.543z" />
-          </svg>
-        )}
-        {undergroundVisible ? 'Hide Utilities' : 'Underground'}
+        <ItemIcon />
       </button>
-    </>
+
+      <button
+        type="button"
+        className={`vtab ${activeRightTab === 'view' ? 'vtab-active' : ''}`}
+        onClick={() => handleTabClick('view')}
+        title="Camera & Viewport Controls"
+        aria-label="Camera & Viewport Controls"
+      >
+        <ViewIcon />
+      </button>
+
+      <button
+        type="button"
+        className={`vtab ${activeRightTab === 'underground' ? 'vtab-active' : ''}`}
+        onClick={() => handleTabClick('underground')}
+        title="Subterranean Utility Layers"
+        aria-label="Subterranean Utility Layers"
+      >
+        <LayersIcon />
+      </button>
+    </nav>
   )
 }

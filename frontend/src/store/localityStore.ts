@@ -1,10 +1,13 @@
 import { create } from 'zustand'
 
 import { ApiError, getBuildingLookup, getBuildings, getUndergroundInfra } from '../api/client'
-import type { Building, BuildingType, UndergroundInfra } from '../types/spatial'
+import type { Building, BuildingType, InfraType, RightTab, UndergroundInfra } from '../types/spatial'
 import { getPolygonCenter } from '../components/footprint'
 import { localXYToScene } from '../utils/coordinates'
+import { PROCEDURAL_UNDERGROUND_INFRA } from '../data/proceduralInfra'
+
 export type BuildingTypeVisibility = Record<string, boolean>
+export type InfraTypeVisibility = Record<InfraType, boolean>
 
 const DEFAULT_BUILDING_VISIBILITY: BuildingTypeVisibility = {
   apartment: true,
@@ -12,6 +15,16 @@ const DEFAULT_BUILDING_VISIBILITY: BuildingTypeVisibility = {
   half_built: true,
   school: true,
   commercial: true,
+}
+
+const DEFAULT_INFRA_VISIBILITY: InfraTypeVisibility = {
+  drainage: true,
+  metro_tunnel: false,
+  metro_station: false,
+  water: false,
+  sewer: false,
+  gas: false,
+  power: false,
 }
 
 interface LocalityState {
@@ -23,6 +36,9 @@ interface LocalityState {
   selectedUnitId: string | null
   selectedInfra: UndergroundInfra | null
   undergroundVisible: boolean
+  visibleInfraTypes: InfraTypeVisibility
+  depthSlice: number
+  activeRightTab: RightTab | null
   visibleBuildingTypes: BuildingTypeVisibility
   underConstructionMessage: string | null
   isLoading: boolean
@@ -41,6 +57,10 @@ interface LocalityState {
   selectInfra: (infra: UndergroundInfra | null) => void
   clearSelection: () => void
   toggleUnderground: () => void
+  toggleInfraType: (type: InfraType) => void
+  setAllInfraTypesVisible: (visible: boolean) => void
+  setDepthSlice: (depth: number) => void
+  setActiveRightTab: (tab: RightTab | null) => void
   toggleBuildingType: (type: BuildingType) => void
   selectBuildingAtPoint: (x: number, z: number) => Promise<Building | null>
   setAllBuildingTypesVisible: (visible: boolean) => void
@@ -60,6 +80,9 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
   selectedUnitId: null,
   selectedInfra: null,
   undergroundVisible: false,
+  visibleInfraTypes: DEFAULT_INFRA_VISIBILITY,
+  depthSlice: -25,
+  activeRightTab: 'underground',
   visibleBuildingTypes: DEFAULT_BUILDING_VISIBILITY,
   underConstructionMessage: null,
   isLoading: false,
@@ -73,7 +96,7 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
     if (get().isLoading) return
     set({ isLoading: true, error: null })
     try {
-      const [buildings, undergroundInfra] = await Promise.all([
+      const [buildings, backendInfra] = await Promise.all([
         getBuildings(15000).catch(async () => {
           // Fallback to local catalog if backend unreachable — load all buildings
           const res = await fetch('/city_buildings_catalog.json')
@@ -82,6 +105,11 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
         }),
         getUndergroundInfra().catch(() => []),
       ])
+      // Keep only drainage infrastructure across the entire map
+      const undergroundInfra = [
+        ...backendInfra.filter((i) => i.infra_type === 'drainage'),
+        ...PROCEDURAL_UNDERGROUND_INFRA,
+      ]
       set({ buildings, undergroundInfra, isLoading: false })
       console.info(`[ULPIN] Initial locality data loaded: ${buildings.length} buildings, ${undergroundInfra.length} underground records`)
     } catch (error) {
@@ -176,6 +204,7 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
       // Turning ON: fly to a ground-level side view so underground pipes are visible
       set((state) => ({
         undergroundVisible: true,
+        activeRightTab: 'underground',
         cameraTarget:   [0, -12, 0],
         cameraPosition: [320, 18, 380],
         cameraKey: state.cameraKey + 1,
@@ -190,6 +219,27 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
       }))
     }
   },
+  toggleInfraType: (type) =>
+    set((state) => ({
+      visibleInfraTypes: {
+        ...state.visibleInfraTypes,
+        [type]: !state.visibleInfraTypes[type],
+      },
+    })),
+  setAllInfraTypesVisible: (visible) =>
+    set({
+      visibleInfraTypes: {
+        drainage: visible,
+        metro_tunnel: visible,
+        metro_station: visible,
+        water: visible,
+        sewer: visible,
+        gas: visible,
+        power: visible,
+      },
+    }),
+  setDepthSlice: (depth) => set({ depthSlice: depth }),
+  setActiveRightTab: (tab) => set({ activeRightTab: tab }),
   toggleBuildingType: (type) =>
     set((state) => ({
       visibleBuildingTypes: {

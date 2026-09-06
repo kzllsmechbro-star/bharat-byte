@@ -6,7 +6,7 @@ export function Legend() {
   return (
     <aside className={`scene-legend-panel ${collapsed ? 'legend-collapsed' : ''}`} aria-label="3D Scene Legend">
       <div className="legend-header">
-        <span className="legend-title">🗺️ Indian Locality Key</span>
+        <span className="legend-title">Indian Locality Key</span>
         <button
           type="button"
           className="legend-toggle-btn"

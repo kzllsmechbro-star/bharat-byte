@@ -8,16 +8,21 @@ import { SearchBar } from './components/SearchBar'
 import { LayerToggles } from './components/LayerToggles'
 import { Legend } from './components/Legend'
 import { BuildingListPanel } from './components/BuildingListPanel'
+import { SubterraneanPanel } from './components/SubterraneanPanel'
+import { ViewPanel } from './components/ViewPanel'
 import { useLocalityStore } from './store/localityStore'
 
 function App() {
   const isLoading = useLocalityStore((state) => state.isLoading)
   const error = useLocalityStore((state) => state.error)
   const loadInitialData = useLocalityStore((state) => state.loadInitialData)
+  const activeRightTab = useLocalityStore((state) => state.activeRightTab)
 
   useEffect(() => {
     void loadInitialData()
   }, [loadInitialData])
+
+  const undergroundVisible = useLocalityStore((state) => state.undergroundVisible)
 
   if (isLoading) {
     return (
@@ -35,33 +40,39 @@ function App() {
         <LocalityScene />
       </SceneErrorBoundary>
 
-      {/* Top Center Search Header */}
-      <header className="top-navigation-bar">
-        <div className="branding-title">
-          <span className="badge-sih">sih26011</span>
-          <h1>3D ULPIN System</h1>
-        </div>
-        <SearchBar />
-      </header>
+      {/* Top Center Search Header — hidden in underground mode */}
+      {!undergroundVisible && (
+        <header className="top-navigation-bar">
+          <div className="branding-title">
+            <span className="badge-sih">sih26011</span>
+            <h1>3D ULPIN System</h1>
+          </div>
+          <SearchBar />
+        </header>
+      )}
 
       {/* Offline notice toast when backend is unreachable */}
-      {error && (
+      {error && !undergroundVisible && (
         <div className="fixed bottom-4 right-4 z-40 bg-slate-900/95 border border-amber-500/60 text-amber-200 px-3.5 py-2 rounded-lg text-xs flex items-center gap-2 shadow-2xl backdrop-blur-sm">
-          <span>⚠️ Backend offline (port 8000). Showing cached/simulated locality.</span>
+          <span>Backend offline (port 8000). Showing cached/simulated locality.</span>
         </div>
       )}
 
       {/* Selection Inspector (Top Left) */}
       <UlpinInfoPanel />
 
-      {/* Layer Controls & Type Filters (Top Right) */}
+      {/* Minimalist Vertical Tab Bar (Right Edge) — in underground mode, only shows the turn-off button */}
       <LayerToggles />
 
-      {/* Buildings Directory Drawer (Right Side) */}
-      <BuildingListPanel />
+      {/* Dynamic Right Sidebar Panels — hidden in underground mode */}
+      {!undergroundVisible && activeRightTab === 'underground' && <SubterraneanPanel />}
+      {!undergroundVisible && activeRightTab === 'view' && <ViewPanel />}
 
-      {/* Color Code Legend (Bottom Left) */}
-      <Legend />
+      {/* Buildings Directory Drawer (Bottom Right) — hidden in underground mode */}
+      {!undergroundVisible && <BuildingListPanel />}
+
+      {/* Color Code Legend (Bottom Left) — hidden in underground mode */}
+      {!undergroundVisible && <Legend />}
     </main>
   )
 }

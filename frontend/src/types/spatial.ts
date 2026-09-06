@@ -103,7 +103,16 @@ export interface UnitDetail extends Unit, UlpinBreakdown {
   postal_address?: string | null
 }
 
-export type InfraType = 'drainage' | 'metro_tunnel' | 'metro_station'
+export type InfraType =
+  | 'drainage'
+  | 'metro_tunnel'
+  | 'metro_station'
+  | 'water'
+  | 'sewer'
+  | 'gas'
+  | 'power'
+
+export type RightTab = 'item' | 'view' | 'underground'
 
 export interface UndergroundInfra {
   id: string

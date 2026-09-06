@@ -11,7 +11,9 @@ export function LocalityBuildings() {
     (b) => b.id === selectedBuildingId || (b.id === hoveredBuildingId && b.id !== selectedBuildingId),
   )
 
-  if (activeBuildings.length === 0) return null
+  const undergroundVisible = useLocalityStore((state) => state.undergroundVisible)
+
+  if (undergroundVisible || activeBuildings.length === 0) return null
 
   return (
     <>

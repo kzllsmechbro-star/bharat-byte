@@ -236,12 +236,12 @@ export function Building3D({ building }: { building: Building; index?: number })
             <span className="text-[11px] font-mono text-emerald-300 font-bold">{building.base_ulpin}</span>
             <span className="text-[10px] bg-sky-500/20 text-sky-300 border border-sky-400/30 px-1.5 py-0.5 rounded font-semibold ml-1">
               {building.structure_category === '1_story_house' || building.stories_count === 1
-                ? '🏠 1-Story House'
+                ? '1-Story House'
                 : building.structure_category === '2_story_house' || building.stories_count === 2
-                ? '🏡 2-Story Duplex'
+                ? '2-Story Duplex'
                 : building.structure_category === '3_story_villa' || building.stories_count === 3
-                ? '🏰 3-Story Villa'
-                : `🏢 ${building.stories_count || orderedFloors.length || 1} Floors`}
+                ? '3-Story Villa'
+                : `${building.stories_count || orderedFloors.length || 1} Floors`}
             </span>
           </div>
         </Html>

@@ -62,9 +62,9 @@ function SceneContent() {
         shadow-camera-top={1200}
         shadow-camera-bottom={-1200}
       />
-      <SatelliteTerrain />
-      <ModularCityModel />
-      <LocalityBuildings />
+      {!undergroundVisible && <SatelliteTerrain />}
+      {!undergroundVisible && <ModularCityModel />}
+      {!undergroundVisible && <LocalityBuildings />}
       <UndergroundLayer />
 
       <OrbitControls

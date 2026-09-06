@@ -4,198 +4,264 @@
     "parcel_id": null,
     "base_ulpin": "29KADRAINS0001",
     "infra_type": "drainage",
-    "path": { "type": "LineString", "coordinates": [[-30, -680], [-30, 80]] },
+    "path": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          -30,
+          -680
+        ],
+        [
+          -30,
+          80
+        ]
+      ]
+    },
     "full_ulpin": "29KADRAINS0001 / STORMWATER-NS-MAIN-NORTH",
     "depth_meters": -6,
-    "waypoints": [[-30, -6, -680], [-32, -6, -460], [-29, -6, -230], [-30, -6, 0], [-30, -6, 80]],
+    "waypoints": [
+      [
+        -30,
+        -6,
+        -680
+      ],
+      [
+        -32,
+        -6,
+        -460
+      ],
+      [
+        -29,
+        -6,
+        -230
+      ],
+      [
+        -30,
+        -6,
+        0
+      ],
+      [
+        -30,
+        -6,
+        80
+      ]
+    ],
     "diameter_m": 1.8,
     "material": "corrugated_steel",
     "segment_name": "Central N–S Drain (North arm)",
-    "node_ids": ["dn-ns-north", "dn-junction-1"]
+    "node_ids": [
+      "dn-ns-north",
+      "dn-junction-1"
+    ]
   },
   {
     "id": "drain-ns-b",
     "parcel_id": null,
     "base_ulpin": "29KADRAINS0002",
     "infra_type": "drainage",
-    "path": { "type": "LineString", "coordinates": [[-30, 80], [-30, 680]] },
+    "path": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          -30,
+          80
+        ],
+        [
+          -30,
+          680
+        ]
+      ]
+    },
     "full_ulpin": "29KADRAINS0002 / STORMWATER-NS-MAIN-SOUTH",
     "depth_meters": -6,
-    "waypoints": [[-30, -6, 80], [-31, -6, 230], [-29, -6, 460], [-30, -6, 680]],
+    "waypoints": [
+      [
+        -30,
+        -6,
+        80
+      ],
+      [
+        -31,
+        -6,
+        230
+      ],
+      [
+        -29,
+        -6,
+        460
+      ],
+      [
+        -30,
+        -6,
+        680
+      ]
+    ],
     "diameter_m": 1.8,
     "material": "corrugated_steel",
     "segment_name": "Central N–S Drain (South arm)",
-    "node_ids": ["dn-junction-1", "dn-ns-south"]
+    "node_ids": [
+      "dn-junction-1",
+      "dn-ns-south"
+    ]
   },
   {
     "id": "drain-ew-a",
     "parcel_id": null,
     "base_ulpin": "29KADRAINE0001",
     "infra_type": "drainage",
-    "path": { "type": "LineString", "coordinates": [[-680, 80], [-30, 80]] },
+    "path": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          -680,
+          80
+        ],
+        [
+          -30,
+          80
+        ]
+      ]
+    },
     "full_ulpin": "29KADRAINE0001 / STORMWATER-EW-MAIN-WEST",
     "depth_meters": -6,
-    "waypoints": [[-680, -6, 80], [-460, -6, 78], [-230, -6, 80], [-30, -6, 80]],
+    "waypoints": [
+      [
+        -680,
+        -6,
+        80
+      ],
+      [
+        -460,
+        -6,
+        78
+      ],
+      [
+        -230,
+        -6,
+        80
+      ],
+      [
+        -30,
+        -6,
+        80
+      ]
+    ],
     "diameter_m": 1.8,
     "material": "corrugated_steel",
     "segment_name": "Central E–W Drain (West arm)",
-    "node_ids": ["dn-ew-west", "dn-junction-1"]
+    "node_ids": [
+      "dn-ew-west",
+      "dn-junction-1"
+    ]
   },
   {
     "id": "drain-ew-b",
     "parcel_id": null,
     "base_ulpin": "29KADRAINE0002",
     "infra_type": "drainage",
-    "path": { "type": "LineString", "coordinates": [[-30, 80], [680, 80]] },
+    "path": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          -30,
+          80
+        ],
+        [
+          680,
+          80
+        ]
+      ]
+    },
     "full_ulpin": "29KADRAINE0002 / STORMWATER-EW-MAIN-EAST",
     "depth_meters": -6,
-    "waypoints": [[-30, -6, 80], [230, -6, 82], [460, -6, 79], [680, -6, 80]],
+    "waypoints": [
+      [
+        -30,
+        -6,
+        80
+      ],
+      [
+        230,
+        -6,
+        82
+      ],
+      [
+        460,
+        -6,
+        79
+      ],
+      [
+        680,
+        -6,
+        80
+      ]
+    ],
     "diameter_m": 1.8,
     "material": "corrugated_steel",
     "segment_name": "Central E–W Drain (East arm)",
-    "node_ids": ["dn-junction-1", "dn-ew-east"]
+    "node_ids": [
+      "dn-junction-1",
+      "dn-ew-east"
+    ]
   },
   {
     "id": "drain-orr",
     "parcel_id": null,
     "base_ulpin": "29KADRAINORR01",
     "infra_type": "drainage",
-    "path": { "type": "LineString", "coordinates": [[-580, -540], [520, 560]] },
+    "path": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          -580,
+          -540
+        ],
+        [
+          520,
+          560
+        ]
+      ]
+    },
     "full_ulpin": "29KADRAINORR01 / STORMWATER-ORR-COLLECTOR",
     "depth_meters": -5.5,
-    "waypoints": [[-580, -5.5, -540], [-380, -5.5, -300], [-180, -5.5, -60], [20, -5.5, 180], [260, -5.5, 380], [520, -5.5, 560]],
+    "waypoints": [
+      [
+        -580,
+        -5.5,
+        -540
+      ],
+      [
+        -380,
+        -5.5,
+        -300
+      ],
+      [
+        -180,
+        -5.5,
+        -60
+      ],
+      [
+        20,
+        -5.5,
+        180
+      ],
+      [
+        260,
+        -5.5,
+        380
+      ],
+      [
+        520,
+        -5.5,
+        560
+      ]
+    ],
     "diameter_m": 2.2,
     "material": "corrugated_steel",
     "segment_name": "Outer Ring Road Collector Drain",
-    "node_ids": ["dn-orr-west", "dn-orr-east"]
-  },
-  {
-    "id": "metro-t1",
-    "parcel_id": null,
-    "base_ulpin": "29KAMETROGRN01",
-    "infra_type": "metro_tunnel",
-    "path": { "type": "LineString", "coordinates": [[-680, 160], [-450, 140]] },
-    "full_ulpin": "29KAMETROGRN01-TUNNEL-WEST-PORTAL",
-    "depth_meters": -18,
-    "waypoints": [[-680, -18, 160], [-600, -18, 154], [-530, -18, 148], [-450, -18, 140]],
-    "diameter_m": 6.0,
-    "material": "reinforced_concrete_tbm",
-    "segment_name": "Purple Line — West Portal to RR Nagar Stn",
-    "node_ids": ["mn-west-portal", "mn-station-1"]
-  },
-  {
-    "id": "metro-t2",
-    "parcel_id": null,
-    "base_ulpin": "29KAMETROGRN02",
-    "infra_type": "metro_tunnel",
-    "path": { "type": "LineString", "coordinates": [[-450, 140], [-225, 110]] },
-    "full_ulpin": "29KAMETROGRN02-TUNNEL-RRNG-TO-MID",
-    "depth_meters": -18,
-    "waypoints": [[-450, -18, 140], [-370, -18, 128], [-295, -18, 118], [-225, -18, 110]],
-    "diameter_m": 6.0,
-    "material": "reinforced_concrete_tbm",
-    "segment_name": "Purple Line — RR Nagar Stn to Midpoint",
-    "node_ids": ["mn-station-1", "mn-mid-1"]
-  },
-  {
-    "id": "metro-t3",
-    "parcel_id": null,
-    "base_ulpin": "29KAMETROGRN03",
-    "infra_type": "metro_tunnel",
-    "path": { "type": "LineString", "coordinates": [[-225, 110], [0, 90]] },
-    "full_ulpin": "29KAMETROGRN03-TUNNEL-MID-TO-RRMP",
-    "depth_meters": -18,
-    "waypoints": [[-225, -18, 110], [-148, -18, 100], [-74, -18, 95], [0, -18, 90]],
-    "diameter_m": 6.0,
-    "material": "reinforced_concrete_tbm",
-    "segment_name": "Purple Line — Midpoint to RRMP Stn",
-    "node_ids": ["mn-mid-1", "mn-station-2"]
-  },
-  {
-    "id": "metro-t4",
-    "parcel_id": null,
-    "base_ulpin": "29KAMETROGRN04",
-    "infra_type": "metro_tunnel",
-    "path": { "type": "LineString", "coordinates": [[0, 90], [225, 68]] },
-    "full_ulpin": "29KAMETROGRN04-TUNNEL-RRMP-TO-MID",
-    "depth_meters": -18,
-    "waypoints": [[0, -18, 90], [75, -18, 82], [150, -18, 74], [225, -18, 68]],
-    "diameter_m": 6.0,
-    "material": "reinforced_concrete_tbm",
-    "segment_name": "Purple Line — RRMP Stn to Midpoint",
-    "node_ids": ["mn-station-2", "mn-mid-2"]
-  },
-  {
-    "id": "metro-t5",
-    "parcel_id": null,
-    "base_ulpin": "29KAMETROGRN05",
-    "infra_type": "metro_tunnel",
-    "path": { "type": "LineString", "coordinates": [[225, 68], [450, 45]] },
-    "full_ulpin": "29KAMETROGRN05-TUNNEL-MID-TO-KONANA",
-    "depth_meters": -18,
-    "waypoints": [[225, -18, 68], [300, -18, 60], [375, -18, 52], [450, -18, 45]],
-    "diameter_m": 6.0,
-    "material": "reinforced_concrete_tbm",
-    "segment_name": "Purple Line — Midpoint to Konanakunte Stn",
-    "node_ids": ["mn-mid-2", "mn-station-3"]
-  },
-  {
-    "id": "metro-t6",
-    "parcel_id": null,
-    "base_ulpin": "29KAMETROGRN06",
-    "infra_type": "metro_tunnel",
-    "path": { "type": "LineString", "coordinates": [[450, 45], [680, 22]] },
-    "full_ulpin": "29KAMETROGRN06-TUNNEL-KONANA-TO-EAST",
-    "depth_meters": -18,
-    "waypoints": [[450, -18, 45], [530, -18, 36], [605, -18, 29], [680, -18, 22]],
-    "diameter_m": 6.0,
-    "material": "reinforced_concrete_tbm",
-    "segment_name": "Purple Line — Konanakunte Stn to East Portal",
-    "node_ids": ["mn-station-3", "mn-east-portal"]
-  },
-  {
-    "id": "metro-s1",
-    "parcel_id": null,
-    "base_ulpin": "29KAMETROST001",
-    "infra_type": "metro_station",
-    "path": { "type": "Point", "coordinates": [-450, 140] },
-    "full_ulpin": "29KAMETROST001-B01-F-U1-U001",
-    "depth_meters": -18,
-    "waypoints": [[-450, -18, 140]],
-    "diameter_m": 6.0,
-    "material": "platform_concrete",
-    "segment_name": "Rajarajeshwari Nagar Metro Station",
-    "assembled_ulpin": "29KAMETROST001-B01-F-U1-U001",
-    "node_ids": ["mn-station-1"]
-  },
-  {
-    "id": "metro-s2",
-    "parcel_id": null,
-    "base_ulpin": "29KAMETROST002",
-    "infra_type": "metro_station",
-    "path": { "type": "Point", "coordinates": [0, 90] },
-    "full_ulpin": "29KAMETROST002-B01-F-U1-U001",
-    "depth_meters": -18,
-    "waypoints": [[0, -18, 90]],
-    "diameter_m": 6.0,
-    "material": "platform_concrete",
-    "segment_name": "RRMP Central Metro Station",
-    "assembled_ulpin": "29KAMETROST002-B01-F-U1-U001",
-    "node_ids": ["mn-station-2"]
-  },
-  {
-    "id": "metro-s3",
-    "parcel_id": null,
-    "base_ulpin": "29KAMETROST003",
-    "infra_type": "metro_station",
-    "path": { "type": "Point", "coordinates": [450, 45] },
-    "full_ulpin": "29KAMETROST003-B01-F-U1-U001",
-    "depth_meters": -18,
-    "waypoints": [[450, -18, 45]],
-    "diameter_m": 6.0,
-    "material": "platform_concrete",
-    "segment_name": "Konanakunte Cross Metro Station",
-    "assembled_ulpin": "29KAMETROST003-B01-F-U1-U001",
-    "node_ids": ["mn-station-3"]
+    "node_ids": [
+      "dn-orr-west",
+      "dn-orr-east"
+    ]
   }
 ]

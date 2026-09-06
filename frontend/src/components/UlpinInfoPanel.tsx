@@ -41,6 +41,7 @@ export function UlpinInfoPanel() {
   const selectedBuildingId = useLocalityStore((state) => state.selectedBuildingId)
   const selectedFloorId = useLocalityStore((state) => state.selectedFloorId)
   const selectedInfra = useLocalityStore((state) => state.selectedInfra)
+  const undergroundVisible = useLocalityStore((state) => state.undergroundVisible)
   const buildings = useLocalityStore((state) => state.buildings)
   const underConstructionMessage = useLocalityStore((state) => state.underConstructionMessage)
   const clearSelection = useLocalityStore((state) => state.clearSelection)
@@ -175,6 +176,10 @@ export function UlpinInfoPanel() {
     }
   }, [])
 
+  if (undergroundVisible && !selectedInfra) {
+    return null
+  }
+
   if (!selectedBuildingId && !selectedUnitId && !underConstructionMessage && !selectedInfra) {
     return null
   }
@@ -203,9 +208,14 @@ export function UlpinInfoPanel() {
           <p className="panel-eyebrow">Subterranean Asset</p>
           <h2>
             {selectedInfra.segment_name ??
-              (selectedInfra.infra_type === 'drainage' && 'Stormwater / Sewage Culvert') ||
-              (selectedInfra.infra_type === 'metro_tunnel' && 'Underground Metro Tunnel') ||
-              (selectedInfra.infra_type === 'metro_station' && 'Subterranean Metro Station')}
+              ((selectedInfra.infra_type === 'drainage' && 'Stormwater / Sewage Culvert') ||
+                (selectedInfra.infra_type === 'metro_tunnel' && 'Underground Metro Tunnel') ||
+                (selectedInfra.infra_type === 'metro_station' && 'Subterranean Metro Station') ||
+                (selectedInfra.infra_type === 'water' && 'Cauvery Potable Water Main') ||
+                (selectedInfra.infra_type === 'sewer' && 'Underground Gravity Sewer Trunk') ||
+                (selectedInfra.infra_type === 'gas' && 'GAIL City Gas Pipeline') ||
+                (selectedInfra.infra_type === 'power' && 'BESCOM Subterranean Power Duct') ||
+                'Subterranean Infrastructure')}
           </h2>
 
           {/* Show assembled ULPIN for stations; full_ulpin for others */}
@@ -220,8 +230,8 @@ export function UlpinInfoPanel() {
             }}
           >
             {copiedText === (selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin)
-              ? '✓ Copied to clipboard!'
-              : '📋 Copy ULPIN'}
+              ? 'Copied to clipboard'
+              : 'Copy ULPIN'}
           </button>
 
           <dl className="property-facts">
@@ -347,7 +357,7 @@ export function UlpinInfoPanel() {
                 </span>
                 {unit && (
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700">
-                    ✓ Verified Unique ULPIN
+                    Verified Unique ULPIN
                   </span>
                 )}
               </div>
@@ -382,7 +392,7 @@ export function UlpinInfoPanel() {
                       void copyText(unit.assembled_ulpin)
                     }}
                   >
-                    {copiedText === unit.assembled_ulpin ? '✓ Copied 3D ULPIN!' : '📋 Copy 3D ULPIN'}
+                    {copiedText === unit.assembled_ulpin ? 'Copied 3D ULPIN' : 'Copy 3D ULPIN'}
                   </button>
 
                   <dl className="ulpin-breakdown my-2 text-xs">
@@ -444,8 +454,8 @@ export function UlpinInfoPanel() {
                     </div>
                   </div>
 
-                  <div className="uniqueness-callout p-2 rounded bg-emerald-950/40 border border-emerald-800/50 text-[11px] text-emerald-200 mt-2 flex items-start gap-1.5">
-                    <span className="text-emerald-400 font-bold">✓</span>
+                  <div className="flex items-start gap-2 text-xs text-slate-300">
+                    <span className="text-emerald-400 font-bold">•</span>
                     <span>
                       <strong>Unique 3D Bhu-Aadhaar ID:</strong> Mathematically verified non-overlapping 3D volume in coordinate space.
                     </span>
@@ -506,8 +516,8 @@ export function UlpinInfoPanel() {
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
                 <span>
                   {building?.building_type === 'house'
-                    ? '🏡 House Units & Suites'
-                    : `🏠 Flats on ${currentFloor?.floor_code || 'Selected Floor'}`}
+                    ? 'House Units & Suites'
+                    : `Flats on ${currentFloor?.floor_code || 'Selected Floor'}`}
                 </span>
                 <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] text-emerald-400 font-mono">
                   {floorUnits.length} {building?.building_type === 'house' ? 'Unit' : 'Flats'}
@@ -572,13 +582,13 @@ export function UlpinInfoPanel() {
                           }}
                           title="Copy ULPIN"
                         >
-                          {copiedText === u.full_ulpin ? '✓ Copied' : '📋 Copy'}
+                          {copiedText === u.full_ulpin ? 'Copied' : 'Copy'}
                         </button>
                       </div>
 
                       <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-slate-700/50 text-[10px]">
                         <span className="text-emerald-400 font-medium">
-                          {u.volume_m3 ? `✓ ${u.volume_m3} m³ volume` : '✓ Unique 3D ID'}
+                          {u.volume_m3 ? `${u.volume_m3} m³ volume` : 'Unique 3D ID'}
                         </span>
                         <button
                           type="button"

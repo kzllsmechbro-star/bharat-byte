@@ -4,20 +4,20 @@ import { useLocalityStore } from '../store/localityStore'
 
 function getBuildingTypeBadge(building: Building) {
   if (building.structure_category === '1_story_house' || building.stories_count === 1) {
-    return <span className="bldg-badge badge-house">🏠 1-Story House</span>
+    return <span className="bldg-badge badge-house">1-Story House</span>
   }
   if (building.structure_category === '2_story_house' || building.stories_count === 2) {
-    return <span className="bldg-badge badge-house">🏡 2-Story Duplex</span>
+    return <span className="bldg-badge badge-house">2-Story Duplex</span>
   }
   if (building.structure_category === '3_story_villa' || building.stories_count === 3) {
-    return <span className="bldg-badge badge-school">🏰 3-Story Villa</span>
+    return <span className="bldg-badge badge-school">3-Story Villa</span>
   }
   if (building.building_type === 'commercial' || building.structure_category === 'commercial_tower') {
-    return <span className="bldg-badge badge-halfbuilt">🏬 Commercial ({building.stories_count || 1} St)</span>
+    return <span className="bldg-badge badge-halfbuilt">Commercial ({building.stories_count || 1} St)</span>
   }
   return (
     <span className="bldg-badge badge-apartment">
-      🏢 {building.stories_count ? `${building.stories_count} St Apt` : 'Apartment'}
+      {building.stories_count ? `${building.stories_count} St Apt` : 'Apartment'}
     </span>
   )
 }
@@ -62,7 +62,7 @@ export function BuildingListPanel() {
         aria-expanded={isOpen}
       >
         <span className="toggle-chevron">{isOpen ? '▶' : '◀'}</span>
-        <span className="drawer-btn-label">🏢 City Buildings & Houses ({buildings.length})</span>
+        <span className="drawer-btn-label">City Buildings & Houses ({buildings.length})</span>
       </button>
 
       {isOpen && (
@@ -94,7 +94,7 @@ export function BuildingListPanel() {
               onChange={(e) => setSearchFilter(e.target.value)}
             />
 
-            {/* Category Filter Chips — same style as LayerToggles filter chips */}
+            {/* Category Filter Chips */}
             <div style={{ display: 'flex', gap: '0.25rem', overflowX: 'auto', padding: '0.25rem 0', fontSize: '0.68rem' }}>
               {(['all', 'house', 'duplex', 'villa', 'apartment'] as const).map((cat) => (
                 <button
@@ -104,7 +104,7 @@ export function BuildingListPanel() {
                   className={`filter-chip ${activeCategory === cat ? 'chip-active' : 'chip-inactive'}`}
                   style={{ padding: '0.2rem 0.5rem', whiteSpace: 'nowrap', fontSize: '0.68rem' }}
                 >
-                  {cat === 'all' ? 'All' : cat === 'house' ? '🏠 1-St' : cat === 'duplex' ? '🏡 Duplex' : cat === 'villa' ? '🏰 Villa' : '🏢 Apt'}
+                  {cat === 'all' ? 'All' : cat === 'house' ? '1-Story' : cat === 'duplex' ? 'Duplex' : cat === 'villa' ? 'Villa' : 'Apartment'}
                 </button>
               ))}
             </div>
