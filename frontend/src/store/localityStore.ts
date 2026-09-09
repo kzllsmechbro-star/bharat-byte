@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 import { ApiError, getBuildingLookup, getBuildings, getUndergroundInfra } from '../api/client'
 import type { Building, BuildingType, InfraType, RightTab, UndergroundInfra } from '../types/spatial'
-import { getPolygonCenter } from '../components/footprint'
+import { getPolygonCenter, getPolygonRing, isPointInPolygon } from '../components/footprint'
 import { localXYToScene } from '../utils/coordinates'
 import { PROCEDURAL_UNDERGROUND_INFRA } from '../data/proceduralInfra'
 
@@ -27,12 +27,20 @@ const DEFAULT_INFRA_VISIBILITY: InfraTypeVisibility = {
   power: false,
 }
 
+export type WeatherMode = 'clear' | 'clouds' | 'monsoon'
+
+const getInitialTime = () => {
+  const d = new Date()
+  return d.getHours() + d.getMinutes() / 60 + d.getSeconds() / 3600
+}
+
 interface LocalityState {
   buildings: Building[]
   undergroundInfra: UndergroundInfra[]
   selectedBuildingId: string | null
   hoveredBuildingId: string | null
   selectedFloorId: string | null
+  hoveredFloorId: string | null
   selectedUnitId: string | null
   selectedInfra: UndergroundInfra | null
   undergroundVisible: boolean
@@ -49,10 +57,17 @@ interface LocalityState {
   /** True while a pan drag gesture is active — used to suppress building hover highlights. */
   isPanning: boolean
 
+  /* ── Celestial & Environmental Controls ── */
+  timeOfDay: number
+  isRealTime: boolean
+  weatherMode: WeatherMode
+  isExplodedView: boolean
+
   loadInitialData: () => Promise<void>
   selectBuilding: (id: string | null, defaultFloorId?: string | null) => void
   setHoveredBuildingId: (id: string | null) => void
   selectFloor: (id: string | null) => void
+  setHoveredFloorId: (id: string | null) => void
   selectUnit: (id: string | null, floorId?: string | null) => void
   selectInfra: (infra: UndergroundInfra | null) => void
   clearSelection: () => void
@@ -69,6 +84,11 @@ interface LocalityState {
   flyToTarget: (target: [number, number, number], position?: [number, number, number]) => void
   resetCamera: () => void
   setIsPanning: (panning: boolean) => void
+
+  setTimeOfDay: (time: number) => void
+  toggleRealTime: () => void
+  setWeatherMode: (mode: WeatherMode) => void
+  toggleExplodedView: () => void
 }
 
 export const useLocalityStore = create<LocalityState>((set, get) => ({
@@ -77,12 +97,13 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
   selectedBuildingId: null,
   hoveredBuildingId: null,
   selectedFloorId: null,
+  hoveredFloorId: null,
   selectedUnitId: null,
   selectedInfra: null,
   undergroundVisible: false,
   visibleInfraTypes: DEFAULT_INFRA_VISIBILITY,
   depthSlice: -25,
-  activeRightTab: 'underground',
+  activeRightTab: null,
   visibleBuildingTypes: DEFAULT_BUILDING_VISIBILITY,
   underConstructionMessage: null,
   isLoading: false,
@@ -92,6 +113,11 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
   cameraKey: 0,
   isPanning: false,
 
+  timeOfDay: getInitialTime(),
+  isRealTime: true,
+  weatherMode: 'clouds',
+  isExplodedView: false,
+
   loadInitialData: async () => {
     if (get().isLoading) return
     set({ isLoading: true, error: null })
@@ -99,7 +125,7 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
       const [buildings, backendInfra] = await Promise.all([
         getBuildings(15000).catch(async () => {
           // Fallback to local catalog if backend unreachable — load all buildings
-          const res = await fetch('/city_buildings_catalog.json')
+          const res = await fetch('/city_buildings_catalog.json?t=' + Date.now(), { cache: 'no-cache' })
           const data = (await res.json()) as Building[]
           return data  // no slice — every building needs a ULPIN-addressable store entry
         }),
@@ -124,18 +150,38 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
     const blenderX = x
     const blenderY = -z
 
-    // 1. Search local buildings first using tight bounds
-    const localMatch = get().buildings.find((b) => {
+    // 1. Search local buildings first using exact polygon test, then bounds fallback
+    const polygonMatch = get().buildings.find((b) => {
       if (b.bounds) {
-        return (
+        if (
           b.bounds[0] - 0.2 <= blenderX &&
           blenderX <= b.bounds[1] + 0.2 &&
           b.bounds[2] - 0.2 <= blenderY &&
           blenderY <= b.bounds[3] + 0.2
-        )
+        ) {
+          const ring = getPolygonRing(b.footprint)
+          if (ring.length >= 3) {
+            return isPointInPolygon(blenderX, blenderY, ring)
+          }
+          return true
+        }
       }
       return false
     })
+
+    const localMatch =
+      polygonMatch ||
+      get().buildings.find((b) => {
+        if (b.bounds) {
+          return (
+            b.bounds[0] - 0.2 <= blenderX &&
+            blenderX <= b.bounds[1] + 0.2 &&
+            b.bounds[2] - 0.2 <= blenderY &&
+            blenderY <= b.bounds[3] + 0.2
+          )
+        }
+        return false
+      })
 
     if (localMatch) {
       get().selectBuilding(localMatch.id)
@@ -194,9 +240,11 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
     set({
       selectedBuildingId: null,
       selectedFloorId: null,
+      hoveredFloorId: null,
       selectedUnitId: null,
       selectedInfra: null,
       underConstructionMessage: null,
+      isExplodedView: false,
     }),
   toggleUnderground: () => {
     const { undergroundVisible } = get()
@@ -297,4 +345,13 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
     }))
   },
   setIsPanning: (panning) => set({ isPanning: panning }),
+  setHoveredFloorId: (id) => set({ hoveredFloorId: id }),
+  setTimeOfDay: (time) => set({ timeOfDay: time, isRealTime: false }),
+  toggleRealTime: () =>
+    set((s) => ({
+      isRealTime: !s.isRealTime,
+      timeOfDay: !s.isRealTime ? getInitialTime() : s.timeOfDay,
+    })),
+  setWeatherMode: (mode) => set({ weatherMode: mode }),
+  toggleExplodedView: () => set((s) => ({ isExplodedView: !s.isExplodedView })),
 }))

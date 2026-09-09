@@ -18,7 +18,7 @@
 
 import { useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Vector3 } from 'three'
+import { PerspectiveCamera, Vector3 } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 
 import { useLocalityStore } from '../store/localityStore'
@@ -148,41 +148,34 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
       const dy = e.clientY - lastPtrRef.current.y
       lastPtrRef.current = { x: e.clientX, y: e.clientY }
 
-      // Scale pan speed by camera elevation above the ground plane so that
-      // zoomed-out views move faster (more world per pixel) and zoomed-in
-      // views feel precise — identical to Blender's dolly-relative pan scaling.
-      const cameraHeight = Math.max(1, camera.position.y)
-      const viewportH    = Math.max(1, canvas.clientHeight)
-      const speedScale   = cameraHeight / viewportH
+      // Scale pan speed matching perspective projection so world tracks mouse 1-to-1
+      const controls = controlsRef.current
+      if (!controls) return
 
-      // Decompose screen motion into world-space axes on the camera's local XZ plane.
-      // We never rotate or tilt the camera — this is pure translation.
-      const camRight = new Vector3()
-      const camForward = new Vector3()
-      camera.getWorldDirection(camForward)
-      camRight.crossVectors(camForward, camera.up).normalize()
+      const dist = Math.max(5, camera.position.distanceTo(controls.target))
+      const fovRad = ((camera as PerspectiveCamera).fov || 46) * (Math.PI / 180)
+      const speedScale = (2 * dist * Math.tan(fovRad / 2)) / Math.max(1, canvas.clientHeight)
 
-      // Project camera "up" onto the world XZ plane for the vertical pan axis
-      // so the movement stays on the ground surface regardless of pitch angle.
-      const screenUp = camera.up.clone().projectOnPlane(new Vector3(0, 1, 0))
-      if (screenUp.lengthSq() < 0.001) screenUp.set(0, 0, -1) // degenerate top-down guard
+      // Decompose screen motion into world-space axes on the camera's view plane:
+      // camRight: horizontal screen axis (left/right pan)
+      // camUp: vertical screen axis (full up/down pan in 3D space & elevation)
+      const camRight = new Vector3(1, 0, 0).applyQuaternion(camera.quaternion).normalize()
+      const camUp = new Vector3(0, 1, 0).applyQuaternion(camera.quaternion).normalize()
 
       const delta = new Vector3()
-        .addScaledVector(camRight,  -dx * speedScale)   // left/right
-        .addScaledVector(screenUp,   dy * speedScale)   // up/down (inverted Y)
+        .addScaledVector(camRight, -dx * speedScale) // left/right
+        .addScaledVector(camUp,     dy * speedScale) // up/down
 
       // Store as the current-frame velocity for the inertia system
       velocityRef.current.copy(delta)
 
       // Apply delta immediately, then clamp target to scene extents
-      const controls = controlsRef.current
-      if (!controls) return
-
       const newTarget = controls.target.clone().add(delta)
       const bounds = getSceneBounds()
       if (bounds) {
         newTarget.x = Math.max(bounds.minX, Math.min(bounds.maxX, newTarget.x))
         newTarget.z = Math.max(bounds.minZ, Math.min(bounds.maxZ, newTarget.z))
+        newTarget.y = Math.max(0.5, Math.min(400, newTarget.y))
       }
       const actualDelta = newTarget.clone().sub(controls.target)
       controls.target.add(actualDelta)
@@ -206,6 +199,34 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
       if (spaceDownRef.current || e.button === 1) e.preventDefault()
     }
 
+    // Shift + Wheel pan up/down (Blender standard)
+    const onWheel = (e: WheelEvent) => {
+      if (e.shiftKey) {
+        e.preventDefault()
+        const controls = controlsRef.current
+        if (!controls) return
+
+        const dist = Math.max(5, camera.position.distanceTo(controls.target))
+        const fovRad = ((camera as PerspectiveCamera).fov || 46) * (Math.PI / 180)
+        const wheelScale = ((2 * dist * Math.tan(fovRad / 2)) / Math.max(1, canvas.clientHeight)) * 0.85
+
+        const camUp = new Vector3(0, 1, 0).applyQuaternion(camera.quaternion).normalize()
+        const delta = camUp.clone().multiplyScalar(-e.deltaY * wheelScale)
+
+        const newTarget = controls.target.clone().add(delta)
+        const bounds = getSceneBounds()
+        if (bounds) {
+          newTarget.x = Math.max(bounds.minX, Math.min(bounds.maxX, newTarget.x))
+          newTarget.z = Math.max(bounds.minZ, Math.min(bounds.maxZ, newTarget.z))
+          newTarget.y = Math.max(0.5, Math.min(400, newTarget.y))
+        }
+        const actualDelta = newTarget.clone().sub(controls.target)
+        controls.target.add(actualDelta)
+        camera.position.add(actualDelta)
+        controls.update()
+      }
+    }
+
     // Keyboard listeners go on the document (Space has no focus requirement)
     document.addEventListener('keydown', onKeyDown)
     document.addEventListener('keyup',   onKeyUp)
@@ -213,6 +234,7 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
     canvas.addEventListener('pointermove',  onPointerMove)
     canvas.addEventListener('pointerup',    onPointerUp)
     canvas.addEventListener('contextmenu',  onContextMenu)
+    canvas.addEventListener('wheel',        onWheel, { passive: false })
 
     return () => {
       document.removeEventListener('keydown', onKeyDown)
@@ -221,6 +243,7 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
       canvas.removeEventListener('pointermove',  onPointerMove)
       canvas.removeEventListener('pointerup',    onPointerUp)
       canvas.removeEventListener('contextmenu',  onContextMenu)
+      canvas.removeEventListener('wheel',        onWheel)
       // Always restore cursor and controls on unmount
       canvas.style.cursor = ''
       if (controlsRef.current) controlsRef.current.enabled = true
@@ -259,6 +282,7 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
       if (bounds) {
         newTarget.x = Math.max(bounds.minX, Math.min(bounds.maxX, newTarget.x))
         newTarget.z = Math.max(bounds.minZ, Math.min(bounds.maxZ, newTarget.z))
+        newTarget.y = Math.max(0.5, Math.min(400, newTarget.y))
       }
       const actualDelta = newTarget.clone().sub(controls.target)
       controls.target.add(actualDelta)

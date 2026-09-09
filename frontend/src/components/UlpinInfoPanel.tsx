@@ -15,6 +15,117 @@ function displayBuildingType(value: string): string {
   return value.replace('_', ' ')
 }
 
+/* ── Clean SVG Vector Icons (Strictly No Emojis) ────────────────────────── */
+
+function CloseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  )
+}
+
+function CopyIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  )
+}
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  )
+}
+
+function BuildingIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+      <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+      <line x1="9" y1="6" x2="9.01" y2="6" />
+      <line x1="15" y1="6" x2="15.01" y2="6" />
+      <line x1="9" y1="10" x2="9.01" y2="10" />
+      <line x1="15" y1="10" x2="15.01" y2="10" />
+      <line x1="9" y1="14" x2="9.01" y2="14" />
+      <line x1="15" y1="14" x2="15.01" y2="14" />
+      <path d="M10 22v-4h4v4" />
+    </svg>
+  )
+}
+
+function ParcelIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+      <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+      <line x1="8" y1="2" x2="8" y2="18" />
+      <line x1="16" y1="6" x2="16" y2="22" />
+    </svg>
+  )
+}
+
+function LayersIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+      <polygon points="12 2 2 7 12 12 22 7 12 2" />
+      <polyline points="2 17 12 22 22 17" />
+      <polyline points="2 12 12 17 22 12" />
+    </svg>
+  )
+}
+
+function CubeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+      <line x1="12" y1="22.08" x2="12" y2="12" />
+    </svg>
+  )
+}
+
+function LocationIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  )
+}
+
+function DoorIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+      <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14" />
+      <path d="M2 20h20" />
+      <circle cx="14" cy="12" r="1" />
+    </svg>
+  )
+}
+
+function ArrowRightIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="12" height="12" aria-hidden="true">
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
+    </svg>
+  )
+}
+
+function PipeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+      <rect x="2" y="7" width="20" height="10" rx="2" ry="2" />
+      <line x1="7" y1="7" x2="7" y2="17" />
+      <line x1="17" y1="7" x2="17" y2="17" />
+    </svg>
+  )
+}
+
 function UlpinLoadingSkeleton() {
   return (
     <div className="skeleton-container" aria-label="Loading property details">
@@ -47,6 +158,8 @@ export function UlpinInfoPanel() {
   const clearSelection = useLocalityStore((state) => state.clearSelection)
   const selectFloor = useLocalityStore((state) => state.selectFloor)
   const selectUnit = useLocalityStore((state) => state.selectUnit)
+  const isExplodedView = useLocalityStore((state) => state.isExplodedView)
+  const toggleExplodedView = useLocalityStore((state) => state.toggleExplodedView)
 
   const [unit, setUnit] = useState<UnitDetail | null>(null)
   const [floors, setFloors] = useState<Floor[]>([])
@@ -69,7 +182,6 @@ export function UlpinInfoPanel() {
       return
     }
 
-    // Immediately populate from building.floors if available in catalog
     if (building?.floors && building.floors.length > 0) {
       const immediateFloors = building.floors
         .filter((f) => !f.floor_code.startsWith('F-U'))
@@ -100,7 +212,6 @@ export function UlpinInfoPanel() {
           const sorted = [...data].sort((a, b) => a.floor_number - b.floor_number)
           setFloors(sorted)
           setIsLoadingFloors(false)
-          // If no floor selected, auto-select first floor
           if (sorted.length > 0) {
             selectFloor(sorted[0].id)
           }
@@ -164,7 +275,7 @@ export function UlpinInfoPanel() {
       })
       .catch((requestError: unknown) => {
         if (activeUnitRequestId.current === currentRequestId) {
-          setError(requestError instanceof Error ? requestError.message : 'Unable to load flat ULPIN details.')
+          setError(requestError instanceof Error ? requestError.message : 'Unable to load flat details.')
           setIsLoadingUnit(false)
         }
       })
@@ -180,6 +291,7 @@ export function UlpinInfoPanel() {
     return null
   }
 
+  /* When nothing is selected, do not render the panel (opens on selection like earlier) */
   if (!selectedBuildingId && !selectedUnitId && !underConstructionMessage && !selectedInfra) {
     return null
   }
@@ -189,7 +301,7 @@ export function UlpinInfoPanel() {
       await navigator.clipboard.writeText(text)
       setCopiedText(text)
       if (copyTimerRef.current) clearTimeout(copyTimerRef.current)
-      copyTimerRef.current = window.setTimeout(() => setCopiedText(null), 2200)
+      copyTimerRef.current = window.setTimeout(() => setCopiedText(null), 2000)
     } catch {
       setCopiedText(null)
     }
@@ -199,165 +311,219 @@ export function UlpinInfoPanel() {
 
   return (
     <aside className="ulpin-info-panel" aria-live="polite">
-      <button className="panel-clear" type="button" onClick={clearSelection} title="Close inspector">
-        ✕ Clear
-      </button>
-
+      {/* ── Subterranean Asset ────────────────────────────────────────────── */}
       {selectedInfra ? (
         <>
-          <p className="panel-eyebrow">Subterranean Asset</p>
-          <h2>
+          <div className="panel-header-row">
+            <span className="panel-eyebrow">Subterranean Asset</span>
+            <button className="panel-close-btn" type="button" onClick={clearSelection} title="Close inspector" aria-label="Close inspector">
+              <CloseIcon />
+            </button>
+          </div>
+
+          <h2 className="panel-title">
             {selectedInfra.segment_name ??
               ((selectedInfra.infra_type === 'drainage' && 'Stormwater / Sewage Culvert') ||
                 (selectedInfra.infra_type === 'metro_tunnel' && 'Underground Metro Tunnel') ||
                 (selectedInfra.infra_type === 'metro_station' && 'Subterranean Metro Station') ||
-                (selectedInfra.infra_type === 'water' && 'Cauvery Potable Water Main') ||
-                (selectedInfra.infra_type === 'sewer' && 'Underground Gravity Sewer Trunk') ||
-                (selectedInfra.infra_type === 'gas' && 'GAIL City Gas Pipeline') ||
-                (selectedInfra.infra_type === 'power' && 'BESCOM Subterranean Power Duct') ||
+                (selectedInfra.infra_type === 'water' && 'Potable Water Main') ||
+                (selectedInfra.infra_type === 'sewer' && 'Gravity Sewer Trunk') ||
+                (selectedInfra.infra_type === 'gas' && 'City Gas Pipeline') ||
+                (selectedInfra.infra_type === 'power' && 'Subterranean Power Duct') ||
                 'Subterranean Infrastructure')}
           </h2>
 
-          {/* Show assembled ULPIN for stations; full_ulpin for others */}
-          <code className="full-ulpin">
-            {selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin}
-          </code>
-          <button
-            className={`copy-ulpin ${copiedText === (selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin) ? 'copy-success' : ''}`}
-            type="button"
-            onClick={() => {
-              void copyText(selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin)
-            }}
-          >
-            {copiedText === (selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin)
-              ? 'Copied to clipboard'
-              : 'Copy ULPIN'}
-          </button>
+          <div className="unit-ulpin-box">
+            <code className="unit-ulpin-code">
+              {selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin}
+            </code>
+            <button
+              className={`icon-copy-action-btn ${copiedText === (selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin) ? 'copied' : ''}`}
+              type="button"
+              onClick={() => {
+                void copyText(selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin)
+              }}
+              title="Copy ULPIN"
+            >
+              {copiedText === (selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin) ? <CheckIcon /> : <CopyIcon />}
+              <span>{copiedText === (selectedInfra.assembled_ulpin ?? selectedInfra.full_ulpin) ? 'Copied' : 'Copy'}</span>
+            </button>
+          </div>
 
-          <dl className="property-facts">
-            <div>
-              <dt>Asset Type</dt>
-              <dd>{selectedInfra.infra_type.replace(/_/g, ' ')}</dd>
+          <div className="meta-grid">
+            <div className="meta-row">
+              <div className="meta-label">
+                <PipeIcon />
+                <span>Asset Type</span>
+              </div>
+              <div className="meta-value capitalize">{selectedInfra.infra_type.replace(/_/g, ' ')}</div>
             </div>
-            <div>
-              <dt>Depth</dt>
-              <dd>{selectedInfra.depth_meters} m subterranean</dd>
+
+            <div className="meta-row">
+              <div className="meta-label">
+                <LayersIcon />
+                <span>Depth</span>
+              </div>
+              <div className="meta-value">{selectedInfra.depth_meters} m subterranean</div>
             </div>
+
             {selectedInfra.diameter_m != null && (
-              <div>
-                <dt>Diameter / Bore</dt>
-                <dd>{selectedInfra.diameter_m} m</dd>
+              <div className="meta-row">
+                <div className="meta-label">
+                  <CubeIcon />
+                  <span>Diameter</span>
+                </div>
+                <div className="meta-value">{selectedInfra.diameter_m} m</div>
               </div>
             )}
-            {selectedInfra.material && (
-              <div>
-                <dt>Construction Material</dt>
-                <dd>{selectedInfra.material.replace(/_/g, ' ')}</dd>
-              </div>
-            )}
-            {selectedInfra.assembled_ulpin && (
-              <div>
-                <dt>Station ULPIN</dt>
-                <dd>
-                  <code style={{ fontSize: '0.65rem', wordBreak: 'break-all' }}>
-                    {selectedInfra.assembled_ulpin}
-                  </code>
-                </dd>
-              </div>
-            )}
-          </dl>
 
-          <div className="infra-parcel-ref">
-            <span>Base ULPIN:</span>
-            <code>{selectedInfra.base_ulpin}</code>
+            {selectedInfra.material && (
+              <div className="meta-row">
+                <div className="meta-label">
+                  <BuildingIcon />
+                  <span>Material</span>
+                </div>
+                <div className="meta-value capitalize">{selectedInfra.material.replace(/_/g, ' ')}</div>
+              </div>
+            )}
+
+            <div className="meta-row">
+              <div className="meta-label">
+                <ParcelIcon />
+                <span>Base ULPIN</span>
+              </div>
+              <div className="meta-value mono-emerald">{selectedInfra.base_ulpin}</div>
+            </div>
           </div>
         </>
       ) : underConstructionMessage ? (
-        /* Case B: Under Construction Notice */
+        /* ── Under Construction Notice ───────────────────────────────────── */
         <>
-          <p className="panel-eyebrow">Under Construction</p>
-          <h2>Structure Status</h2>
+          <div className="panel-header-row">
+            <span className="panel-eyebrow">Under Construction</span>
+            <button className="panel-close-btn" type="button" onClick={clearSelection} title="Close inspector" aria-label="Close inspector">
+              <CloseIcon />
+            </button>
+          </div>
+          <h2 className="panel-title">Structure Status</h2>
           <p className="construction-notice">{underConstructionMessage}</p>
         </>
       ) : (
-        /* Case C: Building / Floor / Flat Inspector */
+        /* ── Building / Floor / Flat Inspector ───────────────────────────── */
         <>
           {building && (
             <div className="panel-building-header">
-              <div className="flex items-center justify-between">
-                <span className="panel-eyebrow">
-                  {building.building_type === 'house'
-                    ? building.stories_count === 1
-                      ? '1-Story Single House'
-                      : building.stories_count === 2
-                      ? '2-Story Duplex / Townhouse'
-                      : `${building.stories_count || 3}-Story Villa`
-                    : building.building_type === 'apartment'
-                    ? `${building.stories_count || floors.length}-Story Apartment Complex`
-                    : building.building_type === 'school'
-                    ? 'Educational & Civic Complex'
-                    : 'Structure & Vertical Property'}
-                </span>
-                <span className="bldg-type-tag text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800">
+              <div className="panel-header-row">
+                <span className="bldg-type-tag">
                   {displayBuildingType(building.building_type)}
                 </span>
+                <button className="panel-close-btn" type="button" onClick={clearSelection} title="Close inspector" aria-label="Close inspector">
+                  <CloseIcon />
+                </button>
               </div>
-              <h2 className="text-xl font-bold flex items-center gap-2 mt-1">
-                <span>{building.name || `Building ${building.building_code}`}</span>
+
+              <h2 className="panel-title">
+                {building.name || `Building ${building.building_code}`}
               </h2>
-              <div className="bldg-meta-box p-2.5 rounded bg-slate-800/60 border border-slate-700/60 text-xs flex flex-col gap-1.5 my-2">
+
+              {/* Aligned Two-Column Metadata Table */}
+              <div className="meta-grid">
                 {building.house_no && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-amber-400 font-semibold">Assigned House No:</span>
-                    <span className="font-bold text-white bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/40">
-                      {building.house_no}
-                    </span>
+                  <div className="meta-row">
+                    <div className="meta-label">
+                      <DoorIcon />
+                      <span>House No</span>
+                    </div>
+                    <div className="meta-value highlight-amber">{building.house_no}</div>
                   </div>
                 )}
+
                 {building.complex_name && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-sky-300 font-semibold">Complex / Enclave:</span>
-                    <span className="font-medium text-slate-200 text-right">
-                      {building.complex_name}
-                    </span>
+                  <div className="meta-row">
+                    <div className="meta-label">
+                      <BuildingIcon />
+                      <span>Complex</span>
+                    </div>
+                    <div className="meta-value">{building.complex_name}</div>
                   </div>
                 )}
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Parcel Base ULPIN:</span>
-                  <code className="font-mono text-emerald-300 font-bold">{building.base_ulpin}</code>
+
+                <div className="meta-row">
+                  <div className="meta-label">
+                    <ParcelIcon />
+                    <span>Parcel ULPIN</span>
+                  </div>
+                  <div className="meta-value mono-emerald flex items-center justify-between">
+                    <span>{building.base_ulpin}</span>
+                    <button
+                      type="button"
+                      className="icon-copy-btn"
+                      onClick={() => void copyText(building.base_ulpin)}
+                      title="Copy Base ULPIN"
+                    >
+                      {copiedText === building.base_ulpin ? <CheckIcon /> : <CopyIcon />}
+                    </button>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Building 3D ULPIN:</span>
-                  <code className="font-mono text-cyan-300">{building.base_ulpin}-{building.building_code}</code>
+
+                <div className="meta-row">
+                  <div className="meta-label">
+                    <CubeIcon />
+                    <span>3D ULPIN</span>
+                  </div>
+                  <div className="meta-value mono-cyan flex items-center justify-between">
+                    <span>{building.base_ulpin}-{building.building_code}</span>
+                    <button
+                      type="button"
+                      className="icon-copy-btn"
+                      onClick={() => void copyText(`${building.base_ulpin}-${building.building_code}`)}
+                      title="Copy Building 3D ULPIN"
+                    >
+                      {copiedText === `${building.base_ulpin}-${building.building_code}` ? <CheckIcon /> : <CopyIcon />}
+                    </button>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center pt-1 border-t border-slate-700/50 text-[11px]">
-                  <span className="text-slate-400">Stories / Height:</span>
-                  <span className="text-white font-semibold">
-                    {building.stories_count || floors.length || 1} Stories (
-                    {building.height_meters ? `${building.height_meters.toFixed(1)} m` : `${((building.stories_count || floors.length || 1) * 3.5).toFixed(1)} m`})
-                  </span>
+
+                <div className="meta-row">
+                  <div className="meta-label">
+                    <LayersIcon />
+                    <span>Stories</span>
+                  </div>
+                  <div className="meta-value">
+                    {building.stories_count || floors.length || 1} Levels (
+                    {building.height_meters
+                      ? `${building.height_meters.toFixed(1)}m`
+                      : `${((building.stories_count || floors.length || 1) * 3.5).toFixed(1)}m`}
+                    )
+                  </div>
                 </div>
+
                 {building.postal_address && (
-                  <div className="pt-1 border-t border-slate-700/50 text-[10px] text-slate-300">
-                    <span className="text-slate-400 block">Postal Address:</span>
-                    <span className="text-slate-200 italic">{building.postal_address}</span>
+                  <div className="meta-row">
+                    <div className="meta-label">
+                      <LocationIcon />
+                      <span>Address</span>
+                    </div>
+                    <div className="meta-value text-slate-300 text-[11px] truncate" title={building.postal_address}>
+                      {building.postal_address}
+                    </div>
                   </div>
                 )}
               </div>
             </div>
           )}
 
-          {/* Selected Flat / House Unit Detailed Hero Card */}
+          {/* ── Selected Flat / Unit Hero Card ────────────────────────────── */}
           {selectedUnitId && (
-            <div className="selected-flat-card mb-3 p-3 rounded-lg bg-amber-950/40 border border-amber-500/40 shadow-inner">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-                  {building?.building_type === 'house' ? 'Selected House Unit' : 'Selected Flat / Unit'}
+            <div className="selected-flat-card">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="unit-card-title flex items-center gap-1.5">
+                  <DoorIcon />
+                  <span>{building?.building_type === 'house' ? 'House Unit' : 'Selected Flat'}</span>
                 </span>
                 {unit && (
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700">
-                    Verified Unique ULPIN
+                  <span className="unit-badge uppercase">
+                    {unit.unit_type}
                   </span>
                 )}
               </div>
@@ -365,242 +531,251 @@ export function UlpinInfoPanel() {
               {isLoadingUnit ? (
                 <UlpinLoadingSkeleton />
               ) : error ? (
-                <p className="panel-error-msg text-red-400 text-xs">{error}</p>
+                <p className="panel-error-msg">{error}</p>
               ) : unit ? (
                 <>
-                  <div className="flex items-baseline justify-between">
-                    <h3 className="text-base font-bold text-white">
+                  <div className="unit-name-row">
+                    <h3 className="unit-name">
                       {unit.unit_number || `Unit ${unit.unit_code}`}
-                      <span className="text-xs font-normal text-slate-300 ml-2">
-                        ({building?.building_type === 'house'
-                          ? currentFloor?.floor_number === 1
-                            ? 'Ground Story'
-                            : 'Upper Story'
-                          : floorLabel(unit.floor_code)})
-                      </span>
                     </h3>
-                  </div>
-
-                  <code className="full-ulpin text-sm font-bold font-mono text-amber-300 bg-slate-900/90 border border-amber-400/40 my-1.5 block">
-                    {unit.assembled_ulpin}
-                  </code>
-
-                  <button
-                    className={`copy-ulpin w-full text-center ${copiedText === unit.assembled_ulpin ? 'copy-success' : ''}`}
-                    type="button"
-                    onClick={() => {
-                      void copyText(unit.assembled_ulpin)
-                    }}
-                  >
-                    {copiedText === unit.assembled_ulpin ? 'Copied 3D ULPIN' : 'Copy 3D ULPIN'}
-                  </button>
-
-                  <dl className="ulpin-breakdown my-2 text-xs">
-                    <div>
-                      <dt>Parcel</dt>
-                      <dd>{unit.base_ulpin}</dd>
-                    </div>
-                    <span aria-hidden="true" className="text-slate-500">→</span>
-                    <div>
-                      <dt>{building?.house_no ? 'House' : 'Bldg'}</dt>
-                      <dd>{building?.house_no || unit.building_code}</dd>
-                    </div>
-                    <span aria-hidden="true" className="text-slate-500">→</span>
-                    <div>
-                      <dt>Story</dt>
-                      <dd>{unit.floor_code}</dd>
-                    </div>
-                    <span aria-hidden="true" className="text-slate-500">→</span>
-                    <div>
-                      <dt>Unit</dt>
-                      <dd className="text-amber-300 font-bold">{unit.unit_code}</dd>
-                    </div>
-                  </dl>
-
-                  {/* AI 3D Mathematical Spatial Signature */}
-                  <div className="ai-spatial-box p-2.5 rounded bg-slate-900/90 border border-sky-500/40 text-xs my-2 flex flex-col gap-1">
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-sky-300 font-bold flex items-center gap-1">
-                        <span>🤖</span>
-                        <span>AI 3D Spatial Registration:</span>
-                      </span>
-                      {unit.spatial_verification_hash && (
-                        <span className="font-mono text-[10px] bg-amber-400/20 text-amber-300 px-1.5 py-0.5 rounded border border-amber-400/40 font-bold">
-                          Sig: #{unit.spatial_verification_hash}
-                        </span>
-                      )}
-                    </div>
-                    <div className="grid grid-cols-2 gap-1.5 pt-1 text-[11px]">
-                      <div>
-                        <span className="text-slate-400 block">3D Morton Code:</span>
-                        <code className="font-mono text-cyan-300 font-bold">
-                          {unit.ai_morton_code || '00000000'}
-                        </code>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block">Vertical Volume:</span>
-                        <span className="font-semibold text-white">
-                          {unit.volume_m3 ? `${unit.volume_m3} m³` : '—'}
-                        </span>
-                      </div>
-                      {unit.elevation_meters && (
-                        <div className="col-span-2 text-[10px] text-slate-300 pt-0.5 border-t border-slate-800">
-                          <span className="text-slate-400">Elevation Bounds: </span>
-                          <span className="font-mono text-emerald-300 font-semibold">
-                            {unit.elevation_meters[0]}m to {unit.elevation_meters[1]}m (Height: 3.5m)
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 text-xs text-slate-300">
-                    <span className="text-emerald-400 font-bold">•</span>
-                    <span>
-                      <strong>Unique 3D Bhu-Aadhaar ID:</strong> Mathematically verified non-overlapping 3D volume in coordinate space.
+                    <span className="unit-level-tag">
+                      {building?.building_type === 'house'
+                        ? currentFloor?.floor_number === 1
+                          ? 'Ground Level'
+                          : 'Upper Level'
+                        : floorLabel(unit.floor_code)}
                     </span>
+                  </div>
+
+                  <div className="unit-ulpin-box">
+                    <code className="unit-ulpin-code">{unit.assembled_ulpin}</code>
+                    <button
+                      className={`icon-copy-action-btn ${copiedText === unit.assembled_ulpin ? 'copied' : ''}`}
+                      type="button"
+                      onClick={() => {
+                        void copyText(unit.assembled_ulpin)
+                      }}
+                      title="Copy 3D ULPIN"
+                    >
+                      {copiedText === unit.assembled_ulpin ? <CheckIcon /> : <CopyIcon />}
+                      <span>{copiedText === unit.assembled_ulpin ? 'Copied' : 'Copy'}</span>
+                    </button>
+                  </div>
+
+                  {/* Clean Hierarchy Breadcrumb */}
+                  <div className="ulpin-hierarchy-row">
+                    <span title="Parcel Base ULPIN">{unit.base_ulpin}</span>
+                    <ArrowRightIcon />
+                    <span title="Building / House">{building?.house_no || unit.building_code}</span>
+                    <ArrowRightIcon />
+                    <span title="Story Code">{unit.floor_code}</span>
+                    <ArrowRightIcon />
+                    <span className="text-cyan-300 font-bold" title="Unit Code">{unit.unit_code}</span>
+                  </div>
+
+                  {/* Clean Spatial Facts Table (No AI slop / hash) */}
+                  <div className="meta-grid">
+                    {unit.volume_m3 && (
+                      <div className="meta-row">
+                        <div className="meta-label">
+                          <CubeIcon />
+                          <span>Volume</span>
+                        </div>
+                        <div className="meta-value">{unit.volume_m3} m³</div>
+                      </div>
+                    )}
+                    {unit.elevation_meters && (
+                      <div className="meta-row">
+                        <div className="meta-label">
+                          <LayersIcon />
+                          <span>Elevation</span>
+                        </div>
+                        <div className="meta-value font-mono text-emerald-300">
+                          {unit.elevation_meters[0]}m – {unit.elevation_meters[1]}m
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </>
               ) : null}
             </div>
           )}
 
-          {/* Floor Selector Pills */}
+          {/* ── Floor Selector & 3D ULPIN Display ─────────────────────────── */}
           {isLoadingFloors ? (
-            <div className="text-xs text-slate-400 py-2">Loading building floors…</div>
+            <div className="text-xs text-slate-400 py-2">Loading floors…</div>
           ) : floors.length > 0 ? (
             <div className="floor-navigator mb-3">
               <div className="flex justify-between items-center mb-1.5">
-                <span className="text-xs font-semibold text-slate-300">
-                  {building?.building_type === 'house' ? 'Select Story Level:' : 'Select Floor Level:'}
+                <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                  <LayersIcon />
+                  <span>{building?.building_type === 'house' ? 'Story Level:' : 'Floor Level:'}</span>
                 </span>
-                <span className="text-[11px] text-sky-400 font-mono">
-                  {currentFloor
-                    ? building?.building_type === 'house'
-                      ? currentFloor.floor_number === 1
-                        ? 'Ground Story (F001)'
-                        : 'Upper Story (F002)'
-                      : `${currentFloor.floor_code} (${floorLabel(currentFloor.floor_code)})`
-                    : ''}
-                </span>
+                <div className="flex items-center gap-2">
+                  {floors.length > 1 && (
+                    <button
+                      type="button"
+                      className={`explode-stack-btn ${isExplodedView ? 'active' : ''}`}
+                      onClick={toggleExplodedView}
+                      title={isExplodedView ? 'Collapse 3D floor stack' : 'Explode 3D floor stack vertically for inspection'}
+                    >
+                      <LayersIcon />
+                      <span>{isExplodedView ? 'Collapse Stack' : 'Explode Floors'}</span>
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="floor-pills-row flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-thin">
+              <div className="floor-pills-row">
                 {floors.map((f) => {
                   const isActive = f.id === selectedFloorId
                   return (
                     <button
                       key={f.id}
                       type="button"
-                      className={`floor-pill-btn px-2.5 py-1 rounded text-xs font-mono font-bold whitespace-nowrap transition-all border ${
-                        isActive
-                          ? 'bg-sky-500 text-white border-sky-300 shadow-md ring-1 ring-sky-300'
-                          : 'bg-slate-800/80 text-slate-300 border-slate-700/70 hover:bg-slate-700'
-                      }`}
+                      className={`floor-pill-btn ${isActive ? 'active' : ''}`}
                       onClick={() => selectFloor(f.id)}
                     >
                       {building?.building_type === 'house'
                         ? f.floor_number === 1
                           ? 'Ground (F1)'
-                          : 'Story 2 (F2)'
+                          : `Story ${f.floor_number} (F${f.floor_number})`
                         : f.floor_code}
                     </button>
                   )
                 })}
               </div>
+
+              {/* ── Floor 3D ULPIN Hero Card (Pops up on floor selection) ── */}
+              {currentFloor && building && (() => {
+                const floorIndex = floors.findIndex((f) => f.id === currentFloor.id)
+                const elevStart = floors
+                  .slice(0, floorIndex >= 0 ? floorIndex : 0)
+                  .reduce((sum, f) => sum + (f.height_meters || 3.5), 0)
+                const elevEnd = elevStart + (currentFloor.height_meters || 3.5)
+                const floorUlpin = `${building.base_ulpin}-${building.building_code}-${currentFloor.floor_code}`
+
+                return (
+                  <div className="selected-floor-hero-card">
+                    <div className="floor-card-top-row">
+                      <div className="flex items-center gap-1.5">
+                        <span className="floor-live-dot" />
+                        <span className="floor-level-title">
+                          {building.building_type === 'house'
+                            ? currentFloor.floor_number === 1
+                              ? 'Ground Story (F001)'
+                              : `Upper Story (F00${currentFloor.floor_number})`
+                            : `Floor Level ${currentFloor.floor_number} (${currentFloor.floor_code})`}
+                        </span>
+                      </div>
+                      <span className="floor-elevation-chip">
+                        Z: +{elevStart.toFixed(1)}m – +{elevEnd.toFixed(1)}m
+                      </span>
+                    </div>
+
+                    <div className="floor-ulpin-row">
+                      <div className="floor-ulpin-text">
+                        <span className="floor-ulpin-tag">Floor 3D ULPIN</span>
+                        <code className="floor-ulpin-val">{floorUlpin}</code>
+                      </div>
+                      <button
+                        type="button"
+                        className={`floor-copy-btn ${copiedText === floorUlpin ? 'copied' : ''}`}
+                        onClick={() => void copyText(floorUlpin)}
+                        title="Copy Floor 3D ULPIN"
+                      >
+                        {copiedText === floorUlpin ? <CheckIcon /> : <CopyIcon />}
+                        <span>{copiedText === floorUlpin ? 'Copied' : 'Copy'}</span>
+                      </button>
+                    </div>
+                  </div>
+                )
+              })()}
             </div>
           ) : null}
 
-          {/* Flats on Current Floor */}
+          {/* ── Flats Directory on Current Floor ──────────────────────────── */}
           <div className="floor-flats-directory mt-2">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
+              <h4 className="flats-dir-title flex items-center gap-1.5">
+                <DoorIcon />
                 <span>
                   {building?.building_type === 'house'
-                    ? 'House Units & Suites'
-                    : `Flats on ${currentFloor?.floor_code || 'Selected Floor'}`}
+                    ? 'Units'
+                    : `Units on ${currentFloor?.floor_code || 'Floor'}`}
                 </span>
-                <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] text-emerald-400 font-mono">
-                  {floorUnits.length} {building?.building_type === 'house' ? 'Unit' : 'Flats'}
+                <span className="unit-count-pill">
+                  {floorUnits.length}
                 </span>
               </h4>
-              <span className="text-[10px] text-emerald-400 font-medium">All Unique 3D ULPINs</span>
             </div>
 
             {isLoadingUnits ? (
               <div className="p-4 text-center text-xs text-slate-400">Loading units…</div>
             ) : floorUnits.length === 0 ? (
-              <div className="p-3 text-center text-xs text-slate-400 bg-slate-850 rounded border border-slate-700">
+              <div className="p-3 text-center text-xs text-slate-400 bg-slate-800/40 rounded border border-slate-700/50">
                 No individual units recorded on this level.
               </div>
             ) : (
-              <div className="flats-list flex flex-col gap-2 max-h-60 overflow-y-auto pr-1 scrollbar-thin">
+              <div className="flats-list">
                 {floorUnits.map((u) => {
                   const isUnitSelected = selectedUnitId === u.id
                   return (
                     <div
                       key={u.id}
-                      className={`flat-item-card p-2.5 rounded-lg border transition-all ${
-                        isUnitSelected
-                          ? 'bg-amber-950/60 border-amber-400/80 ring-1 ring-amber-400/40'
-                          : 'bg-slate-800/70 border-slate-700/80 hover:border-sky-500/60 hover:bg-slate-800'
-                      }`}
+                      className={`flat-item-card ${isUnitSelected ? 'selected' : ''}`}
                     >
-                      <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center justify-between mb-1.5">
                         <div className="flex items-center gap-1.5">
-                          <span className={`w-2 h-2 rounded-full ${isUnitSelected ? 'bg-amber-400' : 'bg-sky-400'}`} />
+                          <DoorIcon />
                           <span className="font-bold text-xs text-white">
-                            {u.unit_number || `Flat ${u.unit_code}`}
+                            {u.unit_number || `Unit ${u.unit_code}`}
                           </span>
                         </div>
-                        <div className="flex items-center gap-1">
-                          {u.spatial_verification_hash && (
-                            <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber-900/60 text-amber-300 border border-amber-500/30">
-                              #{u.spatial_verification_hash}
-                            </span>
-                          )}
-                          <span className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-slate-900/80 text-sky-300 border border-slate-700">
-                            {u.unit_type}
-                          </span>
-                        </div>
+                        <span className="unit-badge">
+                          {u.unit_type}
+                        </span>
                       </div>
 
-                      {/* Unique ULPIN */}
-                      <div className="flex items-center justify-between gap-1 mt-1">
-                        <code className="font-mono text-[11px] text-emerald-300 font-bold bg-slate-950/80 px-2 py-1 rounded border border-slate-800 flex-1 truncate">
+                      {/* ULPIN Row with Minimalist Icon Buttons */}
+                      <div className="flex items-center justify-between gap-1.5 mt-1">
+                        <code className="flat-ulpin-code">
                           {u.full_ulpin}
                         </code>
-                        <button
-                          type="button"
-                          className={`copy-mini-btn px-2 py-1 text-[10px] font-semibold rounded transition-colors whitespace-nowrap ${
-                            copiedText === u.full_ulpin
-                              ? 'bg-emerald-600 text-white'
-                              : 'bg-slate-700 hover:bg-slate-600 text-slate-200'
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            void copyText(u.full_ulpin)
-                          }}
-                          title="Copy ULPIN"
-                        >
-                          {copiedText === u.full_ulpin ? 'Copied' : 'Copy'}
-                        </button>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            className={`icon-copy-btn ${copiedText === u.full_ulpin ? 'active' : ''}`}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              void copyText(u.full_ulpin)
+                            }}
+                            title="Copy ULPIN"
+                            aria-label="Copy ULPIN"
+                          >
+                            {copiedText === u.full_ulpin ? <CheckIcon /> : <CopyIcon />}
+                          </button>
+
+                          <button
+                            type="button"
+                            className={`inspect-icon-btn ${isUnitSelected ? 'active' : ''}`}
+                            onClick={() => {
+                              if (currentFloor) selectUnit(u.id, currentFloor.id)
+                              else selectUnit(u.id)
+                            }}
+                            title={isUnitSelected ? 'Currently inspecting' : 'Inspect unit in 3D'}
+                            aria-label="Inspect unit in 3D"
+                          >
+                            <ArrowRightIcon />
+                          </button>
+                        </div>
                       </div>
 
-                      <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-slate-700/50 text-[10px]">
-                        <span className="text-emerald-400 font-medium">
-                          {u.volume_m3 ? `${u.volume_m3} m³ volume` : 'Unique 3D ID'}
-                        </span>
-                        <button
-                          type="button"
-                          className="text-sky-400 hover:text-sky-300 font-semibold underline underline-offset-2"
-                          onClick={() => {
-                            if (currentFloor) selectUnit(u.id, currentFloor.id)
-                            else selectUnit(u.id)
-                          }}
-                        >
-                          {isUnitSelected ? 'Viewing in 3D' : 'Inspect Unit →'}
-                        </button>
-                      </div>
+                      {u.volume_m3 && (
+                        <div className="flex items-center gap-1 mt-1.5 pt-1 border-t border-slate-800/80 text-[10px] text-slate-400">
+                          <CubeIcon />
+                          <span>{u.volume_m3} m³</span>
+                        </div>
+                      )}
                     </div>
                   )
                 })}

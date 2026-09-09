@@ -112,7 +112,7 @@ export type InfraType =
   | 'gas'
   | 'power'
 
-export type RightTab = 'item' | 'view' | 'underground'
+export type RightTab = 'view' | 'underground'
 
 export interface UndergroundInfra {
   id: string

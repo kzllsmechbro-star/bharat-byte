@@ -57,7 +57,7 @@ let catalogPromise: Promise<Building[]> | null = null
 async function getLocalCatalog(): Promise<Building[]> {
   if (catalogCache) return catalogCache
   if (!catalogPromise) {
-    catalogPromise = fetch('/city_buildings_catalog.json')
+    catalogPromise = fetch('/city_buildings_catalog.json?t=' + Date.now(), { cache: 'no-cache' })
       .then((res) => res.json())
       .then((data: Building[]) => {
         catalogCache = data
@@ -78,59 +78,89 @@ export function subdividePolygon(
 ): GeoJsonGeometry {
   if (totalUnits <= 1 || geometry.type !== 'Polygon') return geometry
   const coords = (geometry.coordinates as number[][][])?.[0]
-  if (!coords || coords.length < 3) return geometry
+  if (!coords || coords.length < 4) return geometry
 
-  let minX = Infinity
-  let maxX = -Infinity
-  let minY = Infinity
-  let maxY = -Infinity
-  for (const [x, y] of coords) {
-    if (x < minX) minX = x
-    if (x > maxX) maxX = x
-    if (y < minY) minY = y
-    if (y > maxY) maxY = y
+  // 1. For 4-corner polygons (5 points with closing point), interpolate along the longest pair of edges
+  if (coords.length === 5) {
+    const [p0, p1, p2, p3] = coords
+    const d0 = Math.hypot(p1[0] - p0[0], p1[1] - p0[1])
+    const d1 = Math.hypot(p2[0] - p1[0], p2[1] - p1[1])
+
+    const t0 = unitIndex / totalUnits + 0.015
+    const t1 = (unitIndex + 1) / totalUnits - 0.015
+
+    if (d0 >= d1) {
+      // Subdivide along edge 0 (p0 -> p1) and opposing edge 2 (p3 -> p2)
+      const v0: [number, number] = [p0[0] + t0 * (p1[0] - p0[0]), p0[1] + t0 * (p1[1] - p0[1])]
+      const v1: [number, number] = [p0[0] + t1 * (p1[0] - p0[0]), p0[1] + t1 * (p1[1] - p0[1])]
+      const v2: [number, number] = [p3[0] + t1 * (p2[0] - p3[0]), p3[1] + t1 * (p2[1] - p3[1])]
+      const v3: [number, number] = [p3[0] + t0 * (p2[0] - p3[0]), p3[1] + t0 * (p2[1] - p3[1])]
+      return {
+        type: 'Polygon',
+        coordinates: [[v0, v1, v2, v3, v0]],
+      }
+    } else {
+      // Subdivide along edge 1 (p1 -> p2) and opposing edge 3 (p0 -> p3)
+      const v0: [number, number] = [p1[0] + t0 * (p2[0] - p1[0]), p1[1] + t0 * (p2[1] - p1[1])]
+      const v1: [number, number] = [p1[0] + t1 * (p2[0] - p1[0]), p1[1] + t1 * (p2[1] - p1[1])]
+      const v2: [number, number] = [p0[0] + t1 * (p3[0] - p0[0]), p0[1] + t1 * (p3[0] - p0[0])]
+      const v3: [number, number] = [p0[0] + t0 * (p3[0] - p0[0]), p0[1] + t0 * (p3[0] - p0[0])]
+      return {
+        type: 'Polygon',
+        coordinates: [[v0, v1, v2, v3, v0]],
+      }
+    }
   }
 
-  const width = maxX - minX
-  const depth = maxY - minY
-  const gap = Math.min(0.2, Math.min(width, depth) * 0.04)
+  // 2. For complex polygons, orient along the longest edge angle to prevent any axis-aligned skew
+  let longestD = 0
+  let bestTheta = 0
+  for (let i = 0; i < coords.length - 1; i++) {
+    const dx = coords[i + 1][0] - coords[i][0]
+    const dy = coords[i + 1][1] - coords[i][1]
+    const d = Math.hypot(dx, dy)
+    if (d > longestD) {
+      longestD = d
+      bestTheta = Math.atan2(dy, dx)
+    }
+  }
 
-  if (width >= depth) {
-    const step = width / totalUnits
-    const uMinX = minX + unitIndex * step + gap
-    const uMaxX = minX + (unitIndex + 1) * step - gap
-    const uMinY = minY + gap
-    const uMaxY = maxY - gap
-    return {
-      type: 'Polygon',
-      coordinates: [
-        [
-          [uMinX, uMinY],
-          [uMaxX, uMinY],
-          [uMaxX, uMaxY],
-          [uMinX, uMaxY],
-          [uMinX, uMinY],
-        ],
-      ],
-    }
-  } else {
-    const step = depth / totalUnits
-    const uMinX = minX + gap
-    const uMaxX = maxX - gap
-    const uMinY = minY + unitIndex * step + gap
-    const uMaxY = minY + (unitIndex + 1) * step - gap
-    return {
-      type: 'Polygon',
-      coordinates: [
-        [
-          [uMinX, uMinY],
-          [uMaxX, uMinY],
-          [uMaxX, uMaxY],
-          [uMinX, uMaxY],
-          [uMinX, uMinY],
-        ],
-      ],
-    }
+  const cosT = Math.cos(-bestTheta)
+  const sinT = Math.sin(-bestTheta)
+  let uMin = Infinity
+  let uMax = -Infinity
+  let vMin = Infinity
+  let vMax = -Infinity
+
+  for (let i = 0; i < coords.length - 1; i++) {
+    const x = coords[i][0]
+    const y = coords[i][1]
+    const u = x * cosT - y * sinT
+    const v = x * sinT + y * cosT
+    if (u < uMin) uMin = u
+    if (u > uMax) uMax = u
+    if (v < vMin) vMin = v
+    if (v > vMax) vMax = v
+  }
+
+  const t0 = unitIndex / totalUnits + 0.015
+  const t1 = (unitIndex + 1) / totalUnits - 0.015
+  const u0 = uMin + t0 * (uMax - uMin)
+  const u1 = uMin + t1 * (uMax - uMin)
+
+  const cosBack = Math.cos(bestTheta)
+  const sinBack = Math.sin(bestTheta)
+  const boxCorners: [number, number][] = [
+    [u0 * cosBack - vMin * sinBack, u0 * sinBack + vMin * cosBack],
+    [u1 * cosBack - vMin * sinBack, u1 * sinBack + vMin * cosBack],
+    [u1 * cosBack - vMax * sinBack, u1 * sinBack + vMax * cosBack],
+    [u0 * cosBack - vMax * sinBack, u0 * sinBack + vMax * cosBack],
+  ]
+  boxCorners.push(boxCorners[0])
+
+  return {
+    type: 'Polygon',
+    coordinates: [boxCorners],
   }
 }
 

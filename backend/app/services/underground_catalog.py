@@ -249,9 +249,11 @@ def _build_stations() -> list[dict[str, Any]]:
 def _build_segments() -> list[dict[str, Any]]:
     result = []
     for seg in _SEGMENTS:
+        full_ulpin = seg.get("full_ulpin") or f"{seg['base_ulpin']} / {seg.get('segment_name', 'INFRA').upper().replace(' ', '-')}"
         result.append({
             **seg,
-            "assembled_ulpin": None,
+            "full_ulpin": full_ulpin,
+            "assembled_ulpin": seg.get("assembled_ulpin", full_ulpin),
             "path": {
                 "type": "LineString",
                 "coordinates": [[wp[0], wp[2]] for wp in seg["waypoints"]],

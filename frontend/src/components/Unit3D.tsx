@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Html } from '@react-three/drei'
 import * as THREE from 'three'
 
 import { getFloorUnits } from '../api/client'
 import type { Floor, Unit } from '../types/spatial'
 import type { LocalPoint } from '../utils/coordinates'
 import { useLocalityStore } from '../store/localityStore'
-import { createFootprintShape, getPolygonCenter, getPolygonRing } from './footprint'
+import { createFootprintShape, getPolygonRing } from './footprint'
 
 const UNIT_COLORS: Record<Unit['unit_type'], string> = {
   residential: '#38bdf8',
@@ -34,7 +33,6 @@ function UnitMesh({
   const [hovered, setHovered] = useState(false)
   const shape = useMemo(() => createFootprintShape(unit.footprint, anchor), [unit.footprint, anchor])
   const ring = useMemo(() => getPolygonRing(unit.footprint), [unit.footprint])
-  const unitCenter = useMemo(() => getPolygonCenter(unit.footprint), [unit.footprint])
 
   const depth = floor.height_meters || 3.5
 
@@ -67,14 +65,17 @@ function UnitMesh({
       >
         <extrudeGeometry args={[shape, { depth, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.04 }]} />
         <meshStandardMaterial
-          color={selected ? '#f59e0b' : hovered ? '#67e8f9' : UNIT_COLORS[unit.unit_type]}
+          color={selected ? '#0284c7' : hovered ? '#38bdf8' : UNIT_COLORS[unit.unit_type]}
           roughness={0.5}
           metalness={0.15}
           transparent={undergroundVisible || (!selected && !hovered)}
           opacity={undergroundVisible ? 0.35 : selected || hovered ? 0.95 : 0.78}
           depthWrite={!undergroundVisible}
-          emissive={selected ? '#f59e0b' : hovered ? '#0284c7' : '#000000'}
-          emissiveIntensity={selected ? 0.45 : hovered ? 0.28 : 0}
+          emissive={selected ? '#0284c7' : hovered ? '#0369a1' : '#000000'}
+          emissiveIntensity={selected ? 0.35 : hovered ? 0.2 : 0}
+          polygonOffset
+          polygonOffsetFactor={-3}
+          polygonOffsetUnits={-3}
         />
       </mesh>
 
@@ -90,54 +91,12 @@ function UnitMesh({
             />
           </bufferGeometry>
           <lineBasicMaterial
-            color={selected ? '#fbbf24' : hovered ? '#38bdf8' : '#ffffff'}
+            color={selected ? '#38bdf8' : hovered ? '#60a5fa' : '#ffffff'}
             linewidth={2}
             transparent
-            opacity={selected || hovered ? 1 : 0.4}
+            opacity={selected || hovered ? 1 : 0.35}
           />
         </lineLoop>
-      )}
-
-      {/* Floating 3D ULPIN Badge on Hover or Selection */}
-      {(selected || hovered) && (
-        <Html
-          position={[unitCenter.x - anchor.x, elevation + depth + 1.2, -(unitCenter.y - anchor.y)]}
-          center
-          distanceFactor={50}
-          zIndexRange={[180, 0]}
-        >
-          <div
-            className={`px-3 py-1.5 rounded-lg backdrop-blur-md shadow-2xl border flex flex-col items-center gap-1 pointer-events-none text-xs select-none transition-all duration-200 ${
-              selected
-                ? 'bg-amber-950/95 border-amber-400 text-amber-200 ring-2 ring-amber-400/60 scale-105'
-                : 'bg-slate-900/95 border-sky-400/80 text-sky-200'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${selected ? 'bg-amber-400 animate-ping' : 'bg-cyan-400'}`} />
-              <span className="font-bold text-white text-xs tracking-wider">
-                {unit.unit_number || `Unit ${unit.unit_code}`}
-              </span>
-              <span className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-white/10 text-emerald-300">
-                {unit.unit_type}
-              </span>
-            </div>
-            <div className="flex items-center gap-1 font-mono text-[11px] font-bold text-emerald-300 bg-black/60 px-2 py-0.5 rounded border border-white/10 tracking-wide">
-              <span>{unit.full_ulpin}</span>
-              {unit.spatial_verification_hash && (
-                <span className="text-amber-300 text-[10px] bg-amber-950/90 px-1 rounded border border-amber-500/50">
-                  #{unit.spatial_verification_hash}
-                </span>
-              )}
-            </div>
-            {unit.elevation_meters && (
-              <div className="text-[10px] text-slate-300 flex items-center gap-2">
-                <span>Z: {unit.elevation_meters[0]}m – {unit.elevation_meters[1]}m</span>
-                {unit.volume_m3 && <span>· Vol: {unit.volume_m3} m³</span>}
-              </div>
-            )}
-          </div>
-        </Html>
       )}
     </group>
   )

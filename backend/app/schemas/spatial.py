@@ -91,7 +91,7 @@ class UndergroundInfraResponse(BaseModel):
     base_ulpin: str
     infra_type: Literal["drainage", "metro_tunnel", "metro_station"]
     path: GeoJsonGeometry
-    full_ulpin: str
+    full_ulpin: str | None = None
     depth_meters: float
     # ── 3D rendering fields (optional for backward-compat) ──────────────────
     waypoints: list[list[float]] | None = None

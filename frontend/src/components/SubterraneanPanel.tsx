@@ -1,6 +1,6 @@
 import { useLocalityStore } from '../store/localityStore'
 
-// ─── Crisp Standard SVG Vector Icons (Classy Dual-Tone) ──────────────────────
+// ─── SVG Icons ────────────────────────────────────────────────────────────────
 
 function ResetIcon() {
   return (
@@ -42,17 +42,31 @@ export function SubterraneanPanel() {
 
   return (
     <aside className="subterranean-panel classy-dual-tone sub-icon-dock" aria-label="Subterranean Controls">
-      {/* ── Top Controls: 3D Subterranean View Mode & Camera Reset ────── */}
+      {/* ── Top Controls ─────────────────────────────────────────────────── */}
       <div className="sub-dock-grid sub-dock-top">
         <button
           type="button"
           className={`sub-icon-btn ${undergroundVisible ? 'active' : 'inactive'}`}
           onClick={toggleUnderground}
-          title={`Subterranean 3D Mode: ${undergroundVisible ? 'ON' : 'OFF'}`}
-          aria-label="Subterranean 3D Mode"
+          title={`Subterranean 3D: ${undergroundVisible ? 'ON' : 'OFF'}`}
+          aria-label="Toggle Subterranean 3D Mode"
           aria-pressed={undergroundVisible}
         >
           <LayersIcon />
+          {/* Live pulse when active */}
+          {undergroundVisible && (
+            <span
+              className="infra-pulse-dot"
+              style={{
+                position: 'absolute',
+                top: 4,
+                right: 4,
+                width: 6,
+                height: 6,
+              }}
+              aria-hidden="true"
+            />
+          )}
         </button>
 
         <button
@@ -68,7 +82,7 @@ export function SubterraneanPanel() {
 
       <div className="sub-dock-divider" role="separator" />
 
-      {/* ── Storm Water Drainage Pipeline Only ──────────────────── */}
+      {/* ── Storm Water Drainage Pipeline ────────────────────────────────── */}
       <div className="sub-dock-single">
         <button
           type="button"
@@ -77,13 +91,27 @@ export function SubterraneanPanel() {
             '--infra-color': '#2dd4bf',
           } as React.CSSProperties}
           onClick={() => toggleInfraType('drainage')}
-          title={`Drainage Pipe Network: ${isDrainageVisible ? 'Visible' : 'Hidden'}`}
-          aria-label="Drainage Pipeline"
+          title={`Drainage Network: ${isDrainageVisible ? 'Visible' : 'Hidden'}`}
+          aria-label="Toggle Drainage Pipeline"
           aria-pressed={isDrainageVisible}
         >
           <span className="sub-btn-icon" style={{ color: isDrainageVisible ? '#2dd4bf' : undefined }}>
             <DrainageIcon />
           </span>
+          {/* Live pulse dot when drainage is visible */}
+          {isDrainageVisible && (
+            <span
+              className="infra-pulse-dot"
+              style={{
+                position: 'absolute',
+                top: 4,
+                right: 4,
+                width: 6,
+                height: 6,
+              }}
+              aria-hidden="true"
+            />
+          )}
         </button>
       </div>
     </aside>
