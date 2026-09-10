@@ -92,7 +92,6 @@ export function Building3D({ building }: { building: Building; index?: number })
   const undergroundVisible = useLocalityStore((state) => state.undergroundVisible)
   const selectBuilding = useLocalityStore((state) => state.selectBuilding)
   const selectFloor = useLocalityStore((state) => state.selectFloor)
-  const isExplodedView = useLocalityStore((state) => state.isExplodedView)
 
   const isSelected = selectedBuildingId === building.id
 
@@ -139,17 +138,15 @@ export function Building3D({ building }: { building: Building; index?: number })
       const baseElevation = orderedFloors
         .slice(0, index)
         .reduce((sum, f) => sum + (f.height_meters || 3.5), 0)
-      // When exploded view is toggled, smooth vertical separation between stories
-      const elevation = isExplodedView ? baseElevation + index * 4.2 : baseElevation
       return {
         floor,
-        elevation,
+        elevation: baseElevation,
         depth: floor.height_meters || 3.5,
         isActive: floor.id === selectedFloorId,
         isHovered: floor.id === hoveredFloorId,
       }
     })
-  }, [orderedFloors, selectedFloorId, hoveredFloorId, isExplodedView])
+  }, [orderedFloors, selectedFloorId, hoveredFloorId])
 
   if (undergroundVisible) return null
 

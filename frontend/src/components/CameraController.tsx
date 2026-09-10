@@ -77,12 +77,14 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
   const targetVec    = useRef(new Vector3(0, 0, 0))
   const posVec       = useRef(new Vector3(245, 220, 245))
   const isAnimating  = useRef(false)
+  const animationTime = useRef(0)
 
   useEffect(() => {
     if (cameraTarget) {
       targetVec.current.set(...cameraTarget)
       if (cameraPosition) posVec.current.set(...cameraPosition)
       isAnimating.current = true
+      animationTime.current = 0
     }
   }, [cameraTarget, cameraPosition, cameraKey])
 
@@ -90,7 +92,10 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
   useEffect(() => {
     const controls = controlsRef.current
     if (!controls) return
-    const cancel = () => { isAnimating.current = false }
+    const cancel = () => {
+      isAnimating.current = false
+      animationTime.current = 0
+    }
     controls.addEventListener('start', cancel)
     return () => controls.removeEventListener('start', cancel)
   }, [controlsRef])
@@ -108,6 +113,12 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
     const isPanTrigger = (e: PointerEvent) =>
       e.button === 1 || (e.button === 0 && spaceDownRef.current)
 
+    // User gesture cancels programmatic fly-to animation immediately
+    const onUserInteraction = () => {
+      isAnimating.current = false
+      animationTime.current = 0
+    }
+
     // Space key: show grab cursor before the drag even starts (matches Blender UX)
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space' && !e.repeat) {
@@ -124,31 +135,32 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
     }
 
     const onPointerDown = (e: PointerEvent) => {
+      onUserInteraction()
       if (!isPanTrigger(e)) return
       e.preventDefault()
 
-      // ── Fix #2: capture the pointer so pointermove keeps firing even when
-      //    the cursor leaves the canvas rect mid-gesture (fast swipe scenario).
-      canvas.setPointerCapture(e.pointerId)
+      try {
+        canvas.setPointerCapture(e.pointerId)
+      } catch {
+        // ignore capture errors
+      }
 
       isPanningRef.current = true
       setIsPanning(true)
       lastPtrRef.current = { x: e.clientX, y: e.clientY }
       velocityRef.current.set(0, 0, 0)
-      isAnimating.current = false                          // abort any fly-to
       if (controlsRef.current) controlsRef.current.enabled = false
-      canvas.style.cursor = 'grab'                        // open-hand on mousedown
+      canvas.style.cursor = 'grab'
     }
 
     const onPointerMove = (e: PointerEvent) => {
       if (!isPanningRef.current) return
-      canvas.style.cursor = 'grabbing'                    // closed-hand while dragging
+      canvas.style.cursor = 'grabbing'
 
       const dx = e.clientX - lastPtrRef.current.x
       const dy = e.clientY - lastPtrRef.current.y
       lastPtrRef.current = { x: e.clientX, y: e.clientY }
 
-      // Scale pan speed matching perspective projection so world tracks mouse 1-to-1
       const controls = controlsRef.current
       if (!controls) return
 
@@ -156,20 +168,15 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
       const fovRad = ((camera as PerspectiveCamera).fov || 46) * (Math.PI / 180)
       const speedScale = (2 * dist * Math.tan(fovRad / 2)) / Math.max(1, canvas.clientHeight)
 
-      // Decompose screen motion into world-space axes on the camera's view plane:
-      // camRight: horizontal screen axis (left/right pan)
-      // camUp: vertical screen axis (full up/down pan in 3D space & elevation)
       const camRight = new Vector3(1, 0, 0).applyQuaternion(camera.quaternion).normalize()
       const camUp = new Vector3(0, 1, 0).applyQuaternion(camera.quaternion).normalize()
 
       const delta = new Vector3()
-        .addScaledVector(camRight, -dx * speedScale) // left/right
-        .addScaledVector(camUp,     dy * speedScale) // up/down
+        .addScaledVector(camRight, -dx * speedScale)
+        .addScaledVector(camUp,     dy * speedScale)
 
-      // Store as the current-frame velocity for the inertia system
       velocityRef.current.copy(delta)
 
-      // Apply delta immediately, then clamp target to scene extents
       const newTarget = controls.target.clone().add(delta)
       const bounds = getSceneBounds()
       if (bounds) {
@@ -183,24 +190,30 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
       controls.update()
     }
 
-    const onPointerUp = (e: PointerEvent) => {
-      if (!isPanningRef.current) return
-      // ── Fix #2 counterpart: release the capture so normal pointer routing resumes
-      canvas.releasePointerCapture(e.pointerId)
+    const onPointerUp = (e?: PointerEvent) => {
+      if (e && canvas.hasPointerCapture(e.pointerId)) {
+        try { canvas.releasePointerCapture(e.pointerId) } catch {}
+      }
       isPanningRef.current = false
       setIsPanning(false)
       if (controlsRef.current) controlsRef.current.enabled = true
-      // Restore cursor: grab if Space is still held, otherwise default
       canvas.style.cursor = spaceDownRef.current ? 'grab' : ''
     }
 
-    // Suppress browser context menu that fires on MMB release in some browsers
+    const onWindowBlur = () => {
+      spaceDownRef.current = false
+      isPanningRef.current = false
+      setIsPanning(false)
+      if (controlsRef.current) controlsRef.current.enabled = true
+      canvas.style.cursor = ''
+    }
+
     const onContextMenu = (e: MouseEvent) => {
       if (spaceDownRef.current || e.button === 1) e.preventDefault()
     }
 
-    // Shift + Wheel pan up/down (Blender standard)
     const onWheel = (e: WheelEvent) => {
+      onUserInteraction()
       if (e.shiftKey) {
         e.preventDefault()
         const controls = controlsRef.current
@@ -227,14 +240,16 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
       }
     }
 
-    // Keyboard listeners go on the document (Space has no focus requirement)
     document.addEventListener('keydown', onKeyDown)
     document.addEventListener('keyup',   onKeyUp)
     canvas.addEventListener('pointerdown',  onPointerDown)
     canvas.addEventListener('pointermove',  onPointerMove)
     canvas.addEventListener('pointerup',    onPointerUp)
+    canvas.addEventListener('pointercancel', onPointerUp)
     canvas.addEventListener('contextmenu',  onContextMenu)
     canvas.addEventListener('wheel',        onWheel, { passive: false })
+    window.addEventListener('blur',         onWindowBlur)
+    window.addEventListener('pointerup',    onPointerUp)
 
     return () => {
       document.removeEventListener('keydown', onKeyDown)
@@ -242,9 +257,11 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
       canvas.removeEventListener('pointerdown',  onPointerDown)
       canvas.removeEventListener('pointermove',  onPointerMove)
       canvas.removeEventListener('pointerup',    onPointerUp)
+      canvas.removeEventListener('pointercancel', onPointerUp)
       canvas.removeEventListener('contextmenu',  onContextMenu)
       canvas.removeEventListener('wheel',        onWheel)
-      // Always restore cursor and controls on unmount
+      window.removeEventListener('blur',         onWindowBlur)
+      window.removeEventListener('pointerup',    onPointerUp)
       canvas.style.cursor = ''
       if (controlsRef.current) controlsRef.current.enabled = true
     }
@@ -256,19 +273,27 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
 
     // 1. Fly-to animation (programmatic camera moves)
     if (isAnimating.current && controls) {
-      const damping = Math.min(1, delta * 4.5)
-      camera.position.lerp(posVec.current, damping)
-      controls.target.lerp(targetVec.current, damping)
-      controls.update()
-
-      if (
-        camera.position.distanceTo(posVec.current) < 0.25 &&
-        controls.target.distanceTo(targetVec.current) < 0.1
-      ) {
-        camera.position.copy(posVec.current)
-        controls.target.copy(targetVec.current)
-        controls.update()
+      animationTime.current += delta
+      if (animationTime.current > 1.8) {
+        // Safety timeout — never trap camera in fly-to loop
         isAnimating.current = false
+        animationTime.current = 0
+      } else {
+        const damping = Math.min(1, delta * 4.5)
+        camera.position.lerp(posVec.current, damping)
+        controls.target.lerp(targetVec.current, damping)
+        controls.update()
+
+        if (
+          camera.position.distanceTo(posVec.current) < 0.4 &&
+          controls.target.distanceTo(targetVec.current) < 0.2
+        ) {
+          camera.position.copy(posVec.current)
+          controls.target.copy(targetVec.current)
+          controls.update()
+          isAnimating.current = false
+          animationTime.current = 0
+        }
       }
     }
 

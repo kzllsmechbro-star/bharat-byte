@@ -11,8 +11,13 @@ export function SatelliteTerrain() {
       rotation-x={-MathUtils.degToRad(90)}
       receiveShadow={!undergroundVisible}
       visible={!undergroundVisible}
+      onPointerDown={(event) => {
+        event.stopPropagation()
+      }}
       onClick={(event) => {
         event.stopPropagation()
+        // Only clear if it was an intentional stationary click, not a camera orbit drag!
+        if (event.delta > 14) return
         clearSelection()
       }}
     >

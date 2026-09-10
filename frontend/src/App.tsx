@@ -9,6 +9,7 @@ import { LayerToggles } from './components/LayerToggles'
 import { Legend } from './components/Legend'
 import { SubterraneanPanel } from './components/SubterraneanPanel'
 import { ViewPanel } from './components/ViewPanel'
+import { UlpinDocumentModal } from './components/UlpinDocumentModal'
 import { useLocalityStore } from './store/localityStore'
 
 /* ── Branded 3D cube SVG icon ─────────────────────────────────────────────── */
@@ -107,6 +108,9 @@ function App() {
 
       {/* Selection Inspector (Top Left) */}
       <UlpinInfoPanel />
+
+      {/* Dynamic ULPIN Document Generator & Viewer Modal */}
+      <UlpinDocumentModal />
 
       {/* Vertical Tab Bar (Right Edge) */}
       <LayerToggles />

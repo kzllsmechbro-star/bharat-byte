@@ -33,6 +33,7 @@ export function BuildingListPanel() {
   const flyToBuilding = useLocalityStore((state) => state.flyToBuilding)
   const selectBuilding = useLocalityStore((state) => state.selectBuilding)
   const visibleBuildingTypes = useLocalityStore((state) => state.visibleBuildingTypes)
+  const openDocumentModal = useLocalityStore((state) => state.openDocumentModal)
 
   const filteredBuildings = useMemo(() => {
     const q = searchFilter.trim().toLowerCase()
@@ -138,14 +139,35 @@ export function BuildingListPanel() {
                     </div>
                     {getBuildingTypeBadge(building)}
                   </div>
-                  <div className="item-row-bottom">
-                    <span className="bldg-ulpin-text">{building.base_ulpin}</span>
-                    {building.complex_name && (
-                      <span style={{ fontSize: '0.63rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px' }}>
-                        {building.complex_name}
-                      </span>
-                    )}
-                    {isHidden && <span className="hidden-indicator">(hidden)</span>}
+                  <div className="item-row-bottom flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 overflow-hidden">
+                      <span className="bldg-ulpin-text">{building.base_ulpin}</span>
+                      {building.complex_name && (
+                        <span style={{ fontSize: '0.63rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100px' }}>
+                          {building.complex_name}
+                        </span>
+                      )}
+                      {isHidden && <span className="hidden-indicator">(hidden)</span>}
+                    </div>
+
+                    <button
+                      type="button"
+                      className="list-doc-btn"
+                      title={`Generate & Download ULPIN document for ${building.house_no || building.name || building.building_code}`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        openDocumentModal(building)
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" width="12" height="12">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="12" y1="18" x2="12" y2="12" />
+                        <line x1="9" y1="15" x2="12" y2="18" />
+                        <line x1="15" y1="15" x2="12" y2="18" />
+                      </svg>
+                      <span>DOC</span>
+                    </button>
                   </div>
                 </button>
               )

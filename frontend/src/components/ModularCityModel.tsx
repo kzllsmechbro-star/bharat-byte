@@ -38,8 +38,15 @@ export function ModularCityModel() {
       object={scene}
       position={[0, 0, 0]}
       scale={[1, 1, 1]}
+      onPointerDown={(event: ThreeEvent<PointerEvent>) => {
+        event.stopPropagation()
+      }}
+      onPointerUp={(event: ThreeEvent<PointerEvent>) => {
+        event.stopPropagation()
+      }}
       onClick={(event: ThreeEvent<MouseEvent>) => {
         event.stopPropagation()
+        if (event.delta > 14) return // Dragging to orbit camera, not a building click
         const pt = event.point
         void selectBuildingAtPoint(pt.x, pt.z)
       }}

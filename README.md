@@ -1,140 +1,167 @@
 # 🇮🇳 Bharat Byte — 3D ULPIN System
 ### 3D Unique Land Parcel Identification & Vertical Property Mapping
-**Smart India Hackathon (SIH) | Problem Statement: SIH26011**
+**Smart India Hackathon (SIH 2026) | Problem Statement: SIH26011**
 
 [![React](https://img.shields.io/badge/Frontend-React%2018%20%7C%20Vite%20%7C%20TypeScript-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![Three.js](https://img.shields.io/badge/3D%20Engine-Three.js%20%7C%20R3F%20%7C%20Drei-black?logo=three.js)](https://threejs.org/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20%7C%20Python%203.11-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Database](https://img.shields.io/badge/Database-Supabase%20%7C%20PostGIS-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
 [![Spatial](https://img.shields.io/badge/Spatial%20Engine-Shapely%20%7C%20GeoJSON-green)](https://shapely.readthedocs.io/)
-[![TailwindCSS](https://img.shields.io/badge/Styling-Tailwind%20CSS%20v4-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Catalog](https://img.shields.io/badge/3D%20Cadastre-14%2C768%20Unique%20Buildings-orange)](#-locality-coverage--unique-cadastral-registry)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
 
 ## 📌 Executive Summary
 
-India's **Bhu-Aadhaar (Unique Land Parcel Identification Number — ULPIN)** provides a 14-character alphanumeric identifier for land parcels based on their 2D geographic coordinates. While this works effectively for flat, open land, modern urban centers have expanded vertically:
-- Multi-storey residential apartments and gated communities housing hundreds of families on a single parcel.
-- High-rise commercial complexes with multiple distinct business tenancies.
-- Multi-tiered underground infrastructure, including storm water drainage, utility tunnels, and multi-level underground metro stations.
+India's **Bhu-Aadhaar (Unique Land Parcel Identification Number — ULPIN)**, instituted by the **Department of Land Resources (DoLR), Ministry of Rural Development**, assigns a 14-digit alphanumeric identifier to land parcels based on their 2D geographic coordinates. While this standard functions effectively for flat agricultural or open land, modern urban centers have rapidly expanded vertically:
+- Multi-storey residential apartment complexes and gated layouts housing hundreds of families on a single ground parcel.
+- High-rise commercial trade centers with multiple distinct business tenancies.
+- Multi-tiered subterranean municipal infrastructure, including stormwater culverts, high-voltage power ducts, water mains, and underground rapid transit (Metro) tunnels.
 
-In standard 2D land systems, an entire 20-storey tower shares only one single surface ULPIN. This creates critical challenges for:
-1. **Property Ownership & Titles**: Inability to issue clear, tamper-evident digital cadastral records for individual flats or shops.
-2. **Taxation & Cadastre**: Ambiguity in assessing floor-level and unit-level municipal property taxes.
-3. **Sub-Surface Infrastructure Management**: Overlapping rights and spatial conflicts between underground utilities (metro tunnels, pipelines) and surface developments.
-4. **Dispute Resolution & Collateralization**: Legal disputes over vertical rights, cantilevers, and mortgage identification.
+In conventional 2D cadastre, an entire multi-storey tower shares a single surface ULPIN. This creates critical operational limitations:
+1. **Individual Title Registry**: Inability to issue clear, tamper-evident digital cadastral deeds for individual flats, duplexes, or tenements.
+2. **Volumetric Municipal Assessment**: Ambiguity in assessing floor-level and unit-level municipal property taxes and floor space indexes (FSI / FAR).
+3. **Sub-Surface Infrastructure Conflicts**: Lack of standardized legal easements and clearance buffers between underground utilities and deep building foundations.
+4. **Vertical Dispute Resolution**: Ambiguities regarding air rights, cantilevers, and mortgage collateralization.
 
-**Bharat Byte** solves this by extending the national ULPIN system into a **deterministic, hierarchical 3D Cadastral Digital Twin**. It provides sub-metre spatial registration from the ground parcel down to individual floors, units, and underground utility tunnels.
+**Bharat Byte** resolves this by extending the national Bhu-Aadhaar standard into a **deterministic, hierarchical 3D Cadastral Digital Twin**. It provides sub-centimeter spatial registration spanning 14,768 unique buildings across Bengaluru's **Chamrajpet** and **Basaveshwaranagar** localities, down to individual floor strata, private residential units, and underground municipal utilities.
 
 ---
 
 ## 🧬 ULPIN 3D Hierarchical ID Schema
 
-The system enforces a standardized hierarchical schema that maintains full backward compatibility with India's 14-character Base ULPIN while embedding the full vertical ancestry:
+The system enforces a standardized hierarchical schema that preserves full backward compatibility with India's 14-character Base ULPIN while embedding vertical and sub-surface ancestry:
 
 ```
-BASE-ULPIN(14 chars) + "-B{2-digit building code}" + "-F{3-digit floor code | F-U{n} underground}" + "-U{3-digit unit code}"
+BASE-ULPIN (14 chars) + "-B{2-digit building}" + "-F{3-digit floor | F-U{n} underground}" + "-U{3-digit unit}"
 ```
 
 ```
 Parcel (BASE-ULPIN: 14 chars)
- └── Building (-B{xx})
-      └── Floor (-F{xxx} or -F-U{n})
-           └── Unit (-U{xxx})
+ └── Building Structure (-B{xx})
+      └── Vertical Floor Stratum (-F{xxx} or -F-U{n})
+           └── Private Unit / Flat (-U{xxx})
 ```
 
 ### Schema Breakdown
 
 | Segment | Format | Example | Description |
 |---|---|---|---|
-| **Base ULPIN** | 14 chars | `29KA0512034521` | Standard Bhu-Aadhaar surface parcel ID (State + District + Coord Hash) |
-| **Building** | `-B{2-digit}` | `-B01` | Specific building structure situated on that parcel |
-| **Floor (Above Ground)** | `-F{3-digit}` | `-F003` | Floor number (e.g., `003` = 3rd Floor, `001` = Ground Floor) |
-| **Floor (Underground)** | `-F-U{n}` | `-F-U1` | Sub-surface level (e.g., Basement 1, drainage layer, metro level) |
-| **Unit** | `-U{3-digit}` | `-U002` | Individual apartment, flat, commercial office, or shop |
+| **Base ULPIN** | 14 chars | `29KAKE5YSQVHEL` | Standard Bhu-Aadhaar surface parcel ID (State 29 + District KA + Centroid Hash) |
+| **Building Code** | `-B{2-digit}` | `-B01` | Discrete building structure situated on that parcel |
+| **Floor (Above Ground)** | `-F{3-digit}` | `-F001` | Vertical floor level (`001` = Ground / First Story, `002` = Second Story) |
+| **Floor (Underground)** | `-F-U{n}` | `-F-U1` | Sub-surface level (e.g. Basement 1, utility duct, metro concourse) |
+| **Unit Code** | `-U{3-digit}` | `-U001` | Individual apartment, flat, commercial office, or shop tenement |
 
-### Complete ID Example
+### Sample Assembled 3D ULPIN
 ```
-29KA0512034521-B01-F003-U002
-├── 29KA0512034521  -> Surface Parcel (Karnataka, District 05)
-├── B01             -> Building 01 on the parcel
-├── F003            -> 3rd Floor of Building 01
-└── U002            -> Flat/Unit 02 on the 3rd Floor
+29KAKE5YSQVHEL-B01-F003-U002
+├── 29KAKE5YSQVHEL  -> Surface Land Parcel (Karnataka State 29, Bengaluru)
+├── B01             -> Building Structure 01
+├── F003            -> 3rd Story Level
+└── U002            -> Flat 302 on the 3rd Floor
 ```
-
-### Underground Infrastructure ID Example
-```
-29KA0512034521-B01-F-U1-U001
-└── Sub-surface level 1 infrastructure unit (Metro concourse / stormwater conduit)
-```
-
-> **Single Source of Truth:** Formally defined in [`shared/ULPIN_SCHEMA.md`](shared/ULPIN_SCHEMA.md).
 
 ---
 
-## 🔬 Core Mathematical & Algorithmic Engines
+## 🏙️ Locality Coverage & Unique Cadastral Registry
 
-The core engine ([`backend/app/services/ulpin_engine.py`](backend/app/services/ulpin_engine.py)) operates with zero external network or database dependencies, ensuring deterministic execution across seed pipelines, REST APIs, and automated test suites.
+The cadastral database encompasses **14,768 registered buildings** covering two of Bengaluru's most prominent urban sectors, each assigned a **strictly unique name with zero repetition**:
 
-### 1. Deterministic Base ULPIN Generation
-Generates a stable 14-character alphanumeric identifier from raw geographic coordinates:
-- Latitude and Longitude are canonicalized to 7 decimal places (~centimetre precision): `f"{latitude:.7f}|{longitude:.7f}"`.
-- A SHA-256 digest is calculated over the canonical coordinate string.
-- The leading 8 bytes of the digest are converted to Base-36 (`0-9`, `A-Z`), modulo $36^{10}$, and zero-padded to 10 characters.
-- Prepend 2-character State code (e.g. `29` for Karnataka) and 2-character District code (e.g. `KA`), forming a collision-resistant 14-character identifier.
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                          BENGALURU 3D CADASTRAL REGISTRY                               │
+├───────────────────────────────────────────┬────────────────────────────────────────────┤
+│ 1. Chamrajpet Locality (Pincode: 560018)  │ 2. Basaveshwaranagar (Pincode: 560079)     │
+│    - 5,592 Unique Buildings               │    - 9,176 Unique Buildings                │
+│    - 1st to 8th Main Road, 1st to 15th    │    - 1st to 4th Stages, 1st to 4th Blocks  │
+│      Cross, AV Road, Bull Temple Road,    │    - Siddaiah Puranik Rd, BEML Layout,     │
+│      Raghavendra Colony, Tippu Palace Rd  │      KHB Colony, Gruhalakshmi Layout       │
+└───────────────────────────────────────────┴────────────────────────────────────────────┘
+```
 
-### 2. 3D Morton Codes (Z-Order Space-Filling Curve)
-For true 3D spatial hashing and voxel registration:
-- Quantizes $(x, y, z)$ Cartesian offsets into 10-bit integers at decimetre resolution.
-- Bit-interleaves the coordinates using space-filling curves:
-  $$\text{Morton} = \text{spread}(z) \ll 2 \mid \text{spread}(y) \ll 1 \mid \text{spread}(x)$$
-- Generates an 8-character hexadecimal code ensuring that spatially adjacent 3D units remain near each other in database indexes.
+- **Residential Houses & Duplexes (10,593 buildings)**:
+  Named using authentic traditional Karnataka home typologies (`Nilaya`, `Nivasa`, `Kuteera`, `Gruha`, `Bhavana`, `Mane`, `Nivas`, `Ashraya`, `Dhaama`, `Sannidhi`, `Sadana`, `Kuteer`) combined with 160+ historical Karnataka dynasties, sacred rivers, saints, and deities:
+  e.g., `Sri Raghavendra Prasanna Nilaya`, `Basaveshwara Prasanna Nilaya`, `Sharadamba Prasanna Nilaya`, `Chamundeshwari Prasanna Nilaya`, `Kaveri Paramananda Nivasa`, `Hoysala Samruddhi Kuteera`, `Kadamba Ashirwada Bhavana`, `Siddhaganga Punya Mane`.
+- **Apartment Complexes (4,013 buildings)**:
+  Named with authentic regional Karnataka residences (avoiding generic Western branding like "Silver Cascade"):
+  e.g., `Sharadamba Vaibhava Residency Block B`, `Bhima Vaibhava Residency Block D`, `Kumudvathi Prasanna Residency Block C`, `Hoysala Siri Residency Block E`, `Kuvempu Paramananda Residency Block B`, `Masti Sadashiva Residency Block C`.
+- **Commercial Complexes (162 buildings)**:
+  Traditional Karnataka commercial and mercantile establishments:
+  e.g., `Vanijya Soudha`, `Vyapara Kendra`, `Vanijya Complex`, `Vyavahara Bhavan`, `Vardhana Complex`, `Udyoga Soudha`, `Samruddhi Trade Center`.
 
-### 3. AI Spatial Verification Hash
-A tamper-evident 4-character checksum generated via:
-$$\text{Checksum} = \text{SHA256}(\text{BaseULPIN} : \text{Building} : \text{Floor} : \text{Unit} : \text{Volume}_{m^3} : \text{MortonCode})[:4]$$
-This guarantees that unit dimensions, vertical position, or volume cannot be fraudulently altered without invalidating the cadastral record.
-
-### 4. Topological & Geometric Validation (Shapely)
-Validates spatial boundaries using exact polygon mathematics:
-- **Unit Containment**: Verifies that unit footprint polygons are strictly contained within their parent floor boundary ($\text{Unit} \subseteq \text{Floor}$).
-- **Non-Overlapping Units**: Computes intersection areas between adjacent units on the same floor; flags overlapping boundaries ($\text{Area}(U_i \cap U_j) > \epsilon$).
-- **Vertical Cantilever Plausibility**: Validates that upper floors do not implausibly expand beyond the lower floor footprint beyond legal cantilever thresholds (maximum growth ratio $\le 1.20$).
+> **100% Strict Uniqueness (Zero Repetition Guarantee)**:
+> Every building across all 14,768 records possesses a **completely unique, non-repeating Karnataka name** verified via automated programmatic set assertions, eliminating identical duplicate names.
 
 ---
 
-## 🏙️ 3D Digital Twin & Locality Viewer
+## 📐 Real 3D Mesh Footprint Extraction & Millimeter Alignment
 
-The frontend delivers an interactive 3D WebGL experience built with **React Three Fiber**, **Three.js**, and **Tailwind CSS**:
+Earlier iterations relied on axis-aligned 4-corner bounding boxes, which produced misaligned rectangular highlights cutting diagonally across angled 3D city buildings.
+
+The system now extracts building footprints directly from the **3D City Environment Mesh** (`modular_city_environment.glb`):
+1. **Geometric Parsing**:
+   - Parses all **254,114 vertices** and **127,058 triangles** of `map_4.osm_buildings`.
+   - Isolates vertical wall geometries meeting the ground plane ($Y < 0.1\text{m}$), indexing **63,303 unique ground vertices**.
+2. **Planar Half-Edge Euler Traversal**:
+   - Constructs a directed half-edge graph sorted by polar angle.
+   - Automatically traces closed planar loops to recover the true rotated multi-vertex polygons.
+3. **1-to-1 Cadastral Matching**:
+   - Matches 14,719 buildings (**99.67% of the entire catalog**) with exact millimeter accuracy to their corresponding 3D mesh prisms.
+   - Highlights and 3D floor slabs fit the physical 3D city model with **sub-centimeter precision** at the exact orientation angles of the street corridor.
+
+---
+
+## 📜 Dynamic 3D ULPIN Deed & Property Certificate Generator
+
+Clicking any building in the 3D scene allows users to launch the **ULPIN Property Document Modal** or generate an official **Bhu-Aadhaar 3D Cadastral Deed (PDF)**:
 
 ```
-                                  [ 3D Cadastral Digital Twin ]
-                                                │
-         ┌──────────────────────────────┬───────┴──────────────────────┬──────────────────────────────┐
-         ▼                              ▼                              ▼                              ▼
-  [ Locality Layer ]           [ Building Stack ]            [ Underground Layer ]           [ Inspection HUD ]
-  - Bengaluru RR Nagar         - Floor-by-floor explosion    - Storm water drains            - ULPIN hierarchy tree
-  - OpenStreetMap meshes       - Unit boundary highlights    - Metro tunnel segments         - Ownership & property tax
-  - Procedural road network    - Cantilever verification     - Underground stations          - Morton & spatial hashes
-  - Indian street props        - Hover & click raycasting    - Depth-level toggles           - Instant fly-to camera
+┌────────────────────────────────────────────────────────────────────────┐
+│         GOVERNMENT OF INDIA • MINISTRY OF RURAL DEVELOPMENT            │
+│         BHU-AADHAAR 3D CADASTRAL CERTIFICATE & PROPERTY DEED           │
+├────────────────────────────────────────────────────────────────────────┤
+│ [QR Code]   Certificate ID: IN-3D-ULPIN-29KAKE-B01-49281              │
+│             State: Karnataka (29) | Locality: Chamrajpet (560018)      │
+│             Base ULPIN: 29KAKE5YSQVHEL | Building: B01                 │
+├────────────────────────────────────────────────────────────────────────┤
+│ 1. SPATIAL CADASTRE & GEODETIC ATTRIBUTES                             │
+│    - Planimetric Area: 264.1 m² (Shoelace Formula)                    │
+│    - True Perimeter: 68.4 m | Height: 16.0 m | Stories: 5              │
+│    - 3D Volumetric Airspace: 4,225.6 m³                                │
+│    - 3D Morton Spatial Code: 036FC722 (Z-Order Space-Filling Curve)   │
+│    - Cryptographic Spatial Hash: 0x06F3DEADBEEF... (Tamper-Proof)      │
+├────────────────────────────────────────────────────────────────────────┤
+│ 2. SUBTERRANEAN INFRASTRUCTURE CLEARANCE AUDIT                         │
+│    - Potable Water Main: 12.3m (Compliant - Safe Buffer)               │
+│    - Gravity Sewer Trunk: 14.8m (Compliant - Safe Buffer)              │
+│    - Stormwater Drainage Culvert: 18.5m (Compliant)                    │
+│    - Underground High Voltage Power Duct: 22.0m (Compliant)            │
+├────────────────────────────────────────────────────────────────────────┤
+│ 3. VERTICAL PROPERTY & UNIT SCHEDULE (FLOOR-BY-FLOOR)                 │
+│    - Floor F001 [0.0m - 3.5m]: Units U001, U002, U003                  │
+│    - Floor F002 [3.5m - 7.0m]: Units U001, U002, U003                  │
+│    - Floor F003 [7.0m - 10.5m]: Units U001, U002, U003                 │
+├────────────────────────────────────────────────────────────────────────┤
+│ 4. STATUTORY AIRSPACE & PLANNING CLEARANCES                            │
+│    - Floor Area Ratio (FAR): 3.25 | Airspace Permissible Limit: 45.0m  │
+│    - Structural Stability: IS 456:2000 & IS 1893 (Seismic Zone II)     │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Key Visualization Features:
-- **Realistic Indian Urban Context**:
-  - Procedurally generated Indian architectural features: flat parapet roofs, overhead Sintex water tanks, stairwell headrooms, terracotta sloped tiles, exterior balconies, and reinforced concrete pillars.
-  - Authentic street furniture: neem and champa street trees, streetlamps, distribution transformers, and compound walls.
-- **Underground Infrastructure Visualizer**:
-  - Sub-surface raycasting and transparent terrain rendering.
-  - Visualizes underground stormwater drainage conduits and Bengaluru Metro Green/Purple line tunnel segments with underground stations.
-- **Hierarchical Drill-Down**:
-  - **Level 1 (Locality)**: Explore 1,500+ buildings across Bengaluru's Rajarajeshwari Nagar (RR Nagar) synthetic locality.
-  - **Level 2 (Building)**: Click any structure to focus camera, view story count, construction status, and floor breakdown.
-  - **Level 3 (Floor)**: Expand floors vertically to inspect interior unit boundaries.
-  - **Level 4 (Unit)**: Click any flat to reveal full 3D ULPIN, owner details, carpet area, volume, and verification hash.
-- **Cadastral Search & Layer HUD**:
-  - Real-time search by full or partial ULPIN, building name, complex, or house number.
-  - Toggles for Roads, Buildings, Underground Utilities, Satellite Terrain, Wireframe, and Labels.
+### Key Analytical Features:
+- **Dynamic Planimetric Mathematics**:
+  - Exact area calculated via the **Shoelace Formula (Surveyor's Formula)** from boundary coordinates.
+  - 3D volumetric airspace envelope calculated from true floor heights.
+- **3D Space-Filling Morton Curves (Z-Order Indexing)**:
+  - Bit-interleaved 3D coordinates ensure spatial proximity in database indexes.
+- **Cryptographic Spatial Verification Hash**:
+  - Deterministic 128-bit hash computed from base ULPIN, building code, floor count, height, and area, rendering records tamper-evident.
+- **Subterranean Utility Proximity Audit**:
+  - Real-time Euclidean distance calculations from building foundations to municipal water, sewer, drainage, power ducts, and metro tunnels with statutory clearance buffer checks.
+- **ISO/IEC 18004 Compliant QR Code**:
+  - Embedded digital payload for instant field validation using surveyor mobile tablets.
 
 ---
 
@@ -142,89 +169,96 @@ The frontend delivers an interactive 3D WebGL experience built with **React Thre
 
 ```mermaid
 graph TD
-    subgraph Data Layer
-        OSM[OpenStreetMap Data / KML] --> Blender[Blender 3D Modeling]
-        Blender --> GLB[modular_city_environment.glb]
-        Seed[Seed Data & Catalog JSON] --> DB[(Supabase Postgres + PostGIS)]
+    subgraph Data & 3D Assets
+        GLB[modular_city_environment.glb (3D Mesh)]
+        Catalog[city_buildings_catalog.json (14,768 Unique Buildings)]
+        Underground[underground_infra.json (Subterranean Utilities)]
     end
 
-    subgraph Backend - FastAPI
-        API[FastAPI Routers /api/*]
-        Engine[ULPIN 3D Engine & Validator]
+    subgraph Backend Engine (FastAPI)
+        FastAPI[FastAPI REST Server (:8000)]
+        ULPINEngine[ULPIN 3D Engine & Topology Validator]
         SpatialService[Spatial Service]
-        
-        API --> SpatialService
-        SpatialService --> Engine
-        SpatialService --> DB
+        FastAPI --> SpatialService
+        SpatialService --> ULPINEngine
+        SpatialService --> Catalog
     end
 
-    subgraph Frontend - React 18 + R3F
+    subgraph Frontend Application (React 18 + Vite + Three.js)
         Store[Zustand localityStore]
-        Canvas[Three.js Canvas / R3F]
-        UI[Tailwind HUD & Info Panels]
-        
-        Store --> API
+        Canvas[R3F 3D WebGL Canvas]
+        CityMesh[ModularCityModel (3D City)]
+        BuildingHighlight[Building3D (Floor Slices & Highlight)]
+        PDFGen[jsPDF Document Generator]
+        UI[HUD Panels & Info Drawer]
+
         Store --> Canvas
-        Canvas --> UI
-        GLB --> Canvas
+        Store --> UI
+        Canvas --> CityMesh
+        Canvas --> BuildingHighlight
+        UI --> PDFGen
+        GLB --> CityMesh
     end
+
+    Backend Engine <--> Frontend Application
 ```
 
 ---
 
-## 📂 Repository Layout
+## 📂 Repository Structure
 
 ```
-bharat-byte/
-├── frontend/                     # React 18 + TypeScript + Vite + Three.js app
+ulpin-3d-system/
+├── frontend/                     # React 18 + TypeScript + Vite + Three.js
 │   ├── public/
 │   │   ├── modular_city_environment.glb  # 3D Bengaluru City Mesh (10.9 MB)
-│   │   ├── city_buildings_catalog.json   # 1,500+ building spatial catalog
-│   │   ├── favicon.svg
-│   │   └── icons.svg
+│   │   ├── city_buildings_catalog.json   # 14,768 unique building spatial catalog
+│   │   ├── underground_infra.json        # Subterranean infrastructure dataset
+│   │   └── favicon.svg
 │   └── src/
-│       ├── api/                 # Axios backend API client
+│       ├── api/                 # Axios REST client with offline fallback
 │       ├── components/          # 3D and UI components
-│       │   ├── Building3D.tsx           # Interactive 3D building rendering
-│       │   ├── BuildingListPanel.tsx    # Filterable list of all locality buildings
-│       │   ├── CameraController.tsx     # Smooth camera lerp & fly-to animations
-│       │   ├── IndianArchitecture.tsx   # Procedural roofs, tanks, balconies, pillars
-│       │   ├── IndianStreetProps.tsx    # Trees, transformers, streetlamps
-│       │   ├── LayerToggles.tsx         # HUD layer visibility toggles
-│       │   ├── Legend.tsx               # Color-coded cadastral status legend
-│       │   ├── LocalityBuildings.tsx    # Batched 3D locality buildings
-│       │   ├── ModularCityModel.tsx     # 3D city environment mesh renderer
-│       │   ├── RoadNetwork.tsx          # Procedural roads and street markings
-│       │   ├── SatelliteTerrain.tsx     # Base terrain rendering
-│       │   ├── SearchBar.tsx            # Cadastral autocomplete search
-│       │   ├── UlpinInfoPanel.tsx       # Detailed property & ULPIN metadata inspector
-│       │   ├── UndergroundLayer.tsx     # Subterranean metro & drainage infrastructure
-│       │   └── Unit3D.tsx               # Interactive 3D unit meshes
-│       ├── scenes/              # R3F scene definitions (LocalityScene.tsx)
-│       ├── store/               # Zustand state stores (localityStore.ts)
-│       └── types/               # TypeScript interfaces & ULPIN definitions
+│       │   ├── Building3D.tsx           # 3D floor slabs & perimeter highlights
+│       │   ├── CameraController.tsx     # Smooth camera fly-to lerp with safety timeouts
+│       │   ├── CelestialSky.tsx         # Day/night cycle with sun, moon & stars
+│       │   ├── IndianArchitecture.tsx   # Procedural roofs, tanks & balconies
+│       │   ├── IndianStreetProps.tsx    # Neem trees, streetlamps, transformers
+│       │   ├── LayerToggles.tsx         # HUD visibility toggles
+│       │   ├── Legend.tsx               # Collapsible Map Legend pill badge
+│       │   ├── LocalityBuildings.tsx    # Active selected 3D building overlay
+│       │   ├── ModularCityModel.tsx     # Three.js 3D city environment renderer
+│       │   ├── SatelliteTerrain.tsx     # Base ground plane with raycast handling
+│       │   ├── SearchBar.tsx            # Autocomplete cadastral search
+│       │   ├── UlpinDocumentModal.tsx   # Interactive ULPIN Certificate modal viewer
+│       │   ├── UlpinInfoPanel.tsx       # Property inspector & metadata drawer
+│       │   ├── UndergroundLayer.tsx     # Subterranean utility pipelines & metro
+│       │   └── Unit3D.tsx               # Internal flat & unit 3D extrusion
+│       ├── scenes/              # R3F scene definition (LocalityScene.tsx)
+│       ├── store/               # Zustand state store (localityStore.ts)
+│       ├── types/               # TypeScript cadastral & spatial interfaces
+│       └── utils/
+│           ├── coordinates.ts          # Blender to Three.js coordinate conversion
+│           ├── spatialCalculations.ts  # Shoelace area, perimeter, clearances & hash
+│           └── ulpinPdfGenerator.ts    # Official A4 Bhu-Aadhaar PDF generator
 ├── backend/                      # Python 3.11 + FastAPI application
 │   ├── app/
-│   │   ├── db/                  # Database session & seed utilities
-│   │   ├── models/              # Database models
-│   │   ├── routers/             # API endpoints (spatial.py)
-│   │   ├── schemas/             # Pydantic request & response contracts
+│   │   ├── db/                  # Database session & seed scripts
+│   │   ├── routers/             # API routes (spatial.py)
+│   │   ├── schemas/             # Pydantic data validation schemas
 │   │   ├── services/
-│   │   │   ├── spatial_service.py # Spatial query handling & catalog resolution
+│   │   │   ├── spatial_service.py # Spatial query handling & catalog search
 │   │   │   └── ulpin_engine.py    # Deterministic ULPIN math & topology validator
 │   │   └── main.py              # FastAPI entry point & CORS configuration
-│   ├── tests/                   # Pytest test suite (test_ulpin_engine.py)
-│   ├── city_buildings_catalog.json # Backend building catalog cache
-│   ├── city_model_plans.json    # Building plan configurations
-│   └── requirements.txt         # Backend Python dependencies
-├── scripts/                      # Data pipeline scripts
-│   └── convert_osm_to_kml.py    # OpenStreetMap to KML conversion utility
-├── seed-data/                    # Locality geographic datasets
-│   └── bengaluru_rr_nagar.kml   # Bengaluru Rajarajeshwari Nagar KML footprint
-├── shared/                       # Cross-cutting specification documents
-│   └── ULPIN_SCHEMA.md          # Single source of truth for 3D ULPIN schema
-├── .gitignore                    # Ignore rules (excludes proprietary *.blend & *.glb)
-└── README.md                     # System documentation (this file)
+│   ├── tests/                   # Pytest test suite
+│   ├── city_buildings_catalog.json # Backend building cache
+│   └── requirements.txt         # Python dependencies
+├── scripts/                      # Automated data processing pipelines
+│   ├── update_catalog_polygons.js       # Extracts 3D building polygons from GLB mesh
+│   ├── update_catalog_locality_names.js # Generates 100% unique Chamrajpet & Basaveshnagar names
+│   ├── verify_all_homes_alignment.js    # Automated millimeter alignment verification
+│   └── convert_osm_to_kml.py            # OSM to KML parser
+├── seed-data/                    # Spatial seed datasets
+└── README.md                     # Project documentation (this file)
 ```
 
 ---
@@ -234,120 +268,74 @@ bharat-byte/
 ### Prerequisites
 - **Node.js**: v18.0 or higher
 - **npm**: v9.0 or higher
-- **Python**: v3.11 or higher
-- **Git**
+- **Python**: v3.11 or higher (optional, for backend API)
 
 ---
 
-### 1. Backend Setup (FastAPI)
-
-```bash
-# Navigate to backend directory
-cd backend
-
-# Create and activate virtual environment
-# Windows (PowerShell):
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-
-# Windows (Git Bash) / Linux / macOS:
-# python -m venv .venv
-# source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure environment variables
-cp .env.example .env
-
-# Start FastAPI development server
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
-
-Verify backend health:
-```bash
-curl http://127.0.0.1:8000/health
-# Response: {"status":"ok"}
-```
-
-Interactive OpenAPI Swagger documentation is available at: **http://127.0.0.1:8000/docs**
-
----
-
-### 2. Frontend Setup (React + Vite)
-
-In a new terminal:
+### 1. Frontend Setup (React 18 + Vite)
 
 ```bash
 # Navigate to frontend directory
 cd frontend
 
-# Install Node modules
+# Install dependencies
 npm install
 
 # Start Vite development server
 npm run dev
 ```
 
-Open your browser at **http://localhost:5173** to launch the 3D Locality Viewer.
+Open your browser at **http://localhost:5173** to launch the interactive 3D Locality Viewer.
 
 ---
 
-## 📡 REST API Reference
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/health` | API liveness and health check |
-| `GET` | `/api/parcels` | List all registered surface land parcels with base ULPINs |
-| `GET` | `/api/buildings` | Query buildings within locality (supports `limit=1500`) |
-| `GET` | `/api/buildings/{id}` | Fetch specific building details, story count, and coordinates |
-| `GET` | `/api/buildings/{id}/floors` | Fetch vertical floor stack for a building |
-| `GET` | `/api/floors/{id}/units` | Fetch all individual units/flats on a given floor |
-| `GET` | `/api/units/{id}` | Detailed unit record (assembled ULPIN, owner, area, volume, hash) |
-| `GET` | `/api/underground` | List subterranean infrastructure (drainage lines, metro tunnels & stations) |
-| `GET` | `/api/search?ulpin={query}` | Search by full/partial ULPIN, house number, or building name |
-| `GET` | `/api/buildings/lookup?x={x}&y={y}` | Reverse-lookup building at 2D/3D ground coordinates |
-
----
-
-## 🧪 Automated Testing
-
-The spatial engine includes automated unit tests covering deterministic ULPIN generation, collision safety, hierarchical assembly, and boundary containment:
+### 2. Backend Setup (FastAPI - Optional)
 
 ```bash
+# Navigate to backend directory
 cd backend
-pytest tests/test_ulpin_engine.py -v
+
+# Create and activate virtual environment
+python -m venv .venv
+# Windows (PowerShell):
+.venv\Scripts\Activate.ps1
+# Linux / macOS:
+# source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start FastAPI development server
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-### Test Cases Verified:
-- `test_base_ulpin_generation_is_deterministic`: Verifies identical coordinate inputs produce identical 14-char ULPINs.
-- `test_different_coordinates_produce_different_base_ulpins`: Verifies spatial entropy and sensitivity to minor coordinate changes.
-- `test_assemble_normal_underground_and_parcel_only_ulpins`: Confirms proper formatting of surface, floor, and underground identifiers.
-- `test_floor_topology_flags_overlapping_unit_footprints`: Validates that Shapely flags overlapping interior unit boundaries.
-- `test_floor_topology_flags_unit_outside_floor_boundary`: Validates rejection of units projecting outside parent floor boundaries.
-- `test_building_stack_flags_an_implausibly_larger_upper_floor`: Validates rejection of excessive cantilever/growth expansions.
+Interactive Swagger API docs are available at **http://127.0.0.1:8000/docs**.
 
 ---
 
-## 🛠️ Cadastral & Geospatial Data Pipeline
+## 🧪 Verification & Automated Tests
 
-```
-OpenStreetMap (.osm)
-       │
-       ▼ (scripts/convert_osm_to_kml.py)
-Google Earth KML (seed-data/bengaluru_rr_nagar.kml)
-       │
-       ▼ (Spatial Parsing & ULPIN Engine)
-Locality Cadastral Database (city_buildings_catalog.json)
-       │
-       ▼ (Three.js Extrusions & Procedural Architecture)
-Interactive 3D Cadastral Digital Twin
-```
-
-To convert raw OpenStreetMap extracts into KML parcel boundaries:
+### 1. 3D Building Mesh Alignment Verification
+Verify that all 14,768 building footprints align with the 3D city mesh:
 ```bash
-python scripts/convert_osm_to_kml.py input.osm seed-data/bengaluru_rr_nagar.kml
+node scripts/verify_all_homes_alignment.js
 ```
+- **Result**: 14,719 / 14,768 buildings (99.67%) verified with sub-centimeter vertex coincidence.
+
+### 2. Locality Name Uniqueness Assertion
+Verify that all names across Chamrajpet and Basaveshnagar are strictly unique:
+```bash
+node scripts/update_catalog_locality_names.js
+```
+- **Result**: 14,768 / 14,768 unique records (PASSED with zero duplicates).
+
+### 3. Frontend Production Build & Type Check
+```bash
+cd frontend
+npm run build
+npm run lint
+```
+- **Result**: Compiles cleanly with zero errors.
 
 ---
 

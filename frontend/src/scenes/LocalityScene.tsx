@@ -92,12 +92,25 @@ function SceneContent() {
 
 export function LocalityScene() {
   const clearSelection = useLocalityStore((state) => state.clearSelection)
+  const pointerDownPos = useRef({ x: 0, y: 0 })
+
   return (
     <Canvas
       dpr={[1, 1.5]}
       camera={{ position: [550, 420, 550], fov: 46, near: 1, far: 15000 }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
-      onPointerMissed={clearSelection}
+      onPointerDown={(e) => {
+        pointerDownPos.current = { x: e.clientX, y: e.clientY }
+      }}
+      onPointerMissed={(e) => {
+        const dx = e.clientX - pointerDownPos.current.x
+        const dy = e.clientY - pointerDownPos.current.y
+        if (Math.hypot(dx, dy) > 10) return // User was orbiting/dragging, keep selection intact!
+        if (useLocalityStore.getState().isPanning) return
+        if (useLocalityStore.getState().activeDocumentBuilding) return
+        if (Date.now() - (useLocalityStore.getState().lastSelectTime || 0) < 400) return
+        clearSelection()
+      }}
     >
       <SceneContent />
     </Canvas>

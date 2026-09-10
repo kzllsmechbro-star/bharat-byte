@@ -126,6 +126,28 @@ function PipeIcon() {
   )
 }
 
+function FileTextIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10 9 9 9 8 9" />
+    </svg>
+  )
+}
+
+function DownloadIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  )
+}
+
 function UlpinLoadingSkeleton() {
   return (
     <div className="skeleton-container" aria-label="Loading property details">
@@ -158,8 +180,7 @@ export function UlpinInfoPanel() {
   const clearSelection = useLocalityStore((state) => state.clearSelection)
   const selectFloor = useLocalityStore((state) => state.selectFloor)
   const selectUnit = useLocalityStore((state) => state.selectUnit)
-  const isExplodedView = useLocalityStore((state) => state.isExplodedView)
-  const toggleExplodedView = useLocalityStore((state) => state.toggleExplodedView)
+  const openDocumentModal = useLocalityStore((state) => state.openDocumentModal)
 
   const [unit, setUnit] = useState<UnitDetail | null>(null)
   const [floors, setFloors] = useState<Floor[]>([])
@@ -510,6 +531,25 @@ export function UlpinInfoPanel() {
                   </div>
                 )}
               </div>
+
+              {/* ── Dynamic ULPIN Document Generator Button ──────────────── */}
+              <div className="bldg-document-action-wrap mt-2.5">
+                <button
+                  type="button"
+                  className="bldg-document-trigger-btn"
+                  onClick={() => openDocumentModal(building)}
+                  title={`Generate and download official 3D ULPIN Cadastral Document for ${building.house_no || building.name || building.building_code}`}
+                >
+                  <div className="btn-left-content">
+                    <FileTextIcon />
+                    <span className="font-semibold text-xs">ULPIN Property Document</span>
+                  </div>
+                  <div className="btn-right-action">
+                    <span className="btn-action-label">Generate & Download</span>
+                    <DownloadIcon />
+                  </div>
+                </button>
+              </div>
             </div>
           )}
 
@@ -611,19 +651,6 @@ export function UlpinInfoPanel() {
                   <LayersIcon />
                   <span>{building?.building_type === 'house' ? 'Story Level:' : 'Floor Level:'}</span>
                 </span>
-                <div className="flex items-center gap-2">
-                  {floors.length > 1 && (
-                    <button
-                      type="button"
-                      className={`explode-stack-btn ${isExplodedView ? 'active' : ''}`}
-                      onClick={toggleExplodedView}
-                      title={isExplodedView ? 'Collapse 3D floor stack' : 'Explode 3D floor stack vertically for inspection'}
-                    >
-                      <LayersIcon />
-                      <span>{isExplodedView ? 'Collapse Stack' : 'Explode Floors'}</span>
-                    </button>
-                  )}
-                </div>
               </div>
               <div className="floor-pills-row">
                 {floors.map((f) => {

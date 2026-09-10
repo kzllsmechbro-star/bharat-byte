@@ -24,15 +24,27 @@ export function Legend() {
     <aside
       className={`scene-legend-panel ${collapsed ? 'legend-collapsed' : ''}`}
       aria-label="Map Legend"
+      onClick={collapsed ? () => setCollapsed(false) : undefined}
     >
-      <div className="legend-header">
-        <span className="legend-title">Map Legend</span>
+      <div
+        className="legend-header"
+        onClick={() => setCollapsed(!collapsed)}
+        style={{ cursor: 'pointer' }}
+        title={collapsed ? 'Click to expand Map Legend' : 'Click to collapse Map Legend down'}
+      >
+        <div className="legend-header-left">
+          <span className="legend-dot-indicator" />
+          <span className="legend-title">Map Legend</span>
+        </div>
         <button
           type="button"
           className="legend-toggle-btn"
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={(e) => {
+            e.stopPropagation()
+            setCollapsed(!collapsed)
+          }}
           aria-expanded={!collapsed}
-          title={collapsed ? 'Expand legend' : 'Collapse legend'}
+          title={collapsed ? 'Expand Map Legend' : 'Collapse Map Legend down'}
         >
           {collapsed ? <ChevronUpIcon /> : <ChevronDownIcon />}
         </button>

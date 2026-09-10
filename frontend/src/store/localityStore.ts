@@ -56,12 +56,18 @@ interface LocalityState {
   cameraKey: number
   /** True while a pan drag gesture is active — used to suppress building hover highlights. */
   isPanning: boolean
+  lastSelectTime: number
 
   /* ── Celestial & Environmental Controls ── */
   timeOfDay: number
   isRealTime: boolean
   weatherMode: WeatherMode
   isExplodedView: boolean
+
+  /* ── ULPIN Document Modal ── */
+  activeDocumentBuilding: Building | null
+  openDocumentModal: (building: Building) => void
+  closeDocumentModal: () => void
 
   loadInitialData: () => Promise<void>
   selectBuilding: (id: string | null, defaultFloorId?: string | null) => void
@@ -112,11 +118,16 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
   cameraPosition: null,
   cameraKey: 0,
   isPanning: false,
+  lastSelectTime: 0,
 
   timeOfDay: getInitialTime(),
   isRealTime: true,
   weatherMode: 'clouds',
   isExplodedView: false,
+
+  activeDocumentBuilding: null,
+  openDocumentModal: (building) => set({ activeDocumentBuilding: building }),
+  closeDocumentModal: () => set({ activeDocumentBuilding: null }),
 
   loadInitialData: async () => {
     if (get().isLoading) return
@@ -150,15 +161,18 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
     const blenderX = x
     const blenderY = -z
 
-    // 1. Search local buildings first using exact polygon test, then bounds fallback
-    const polygonMatch = get().buildings.find((b) => {
+    const buildings = get().buildings
+    if (buildings.length === 0) return null
+
+    // 1. Search local buildings first using exact polygon test with 1.5m tolerance
+    const polygonMatch = buildings.find((b) => {
       if (b.bounds) {
-        if (
-          b.bounds[0] - 0.2 <= blenderX &&
-          blenderX <= b.bounds[1] + 0.2 &&
-          b.bounds[2] - 0.2 <= blenderY &&
-          blenderY <= b.bounds[3] + 0.2
-        ) {
+        const minX = Math.min(b.bounds[0], b.bounds[1]) - 1.5
+        const maxX = Math.max(b.bounds[0], b.bounds[1]) + 1.5
+        const minY = Math.min(b.bounds[2], b.bounds[3]) - 1.5
+        const maxY = Math.max(b.bounds[2], b.bounds[3]) + 1.5
+
+        if (minX <= blenderX && blenderX <= maxX && minY <= blenderY && blenderY <= maxY) {
           const ring = getPolygonRing(b.footprint)
           if (ring.length >= 3) {
             return isPointInPolygon(blenderX, blenderY, ring)
@@ -169,26 +183,77 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
       return false
     })
 
-    const localMatch =
-      polygonMatch ||
-      get().buildings.find((b) => {
-        if (b.bounds) {
-          return (
-            b.bounds[0] - 0.2 <= blenderX &&
-            blenderX <= b.bounds[1] + 0.2 &&
-            b.bounds[2] - 0.2 <= blenderY &&
-            blenderY <= b.bounds[3] + 0.2
-          )
-        }
-        return false
-      })
-
-    if (localMatch) {
-      get().selectBuilding(localMatch.id)
-      return localMatch
+    if (polygonMatch) {
+      get().selectBuilding(polygonMatch.id)
+      return polygonMatch
     }
 
-    // 2. Query backend spatial lookup with Blender (x, y)
+    // 2. Search local buildings with 3.5m bounding box tolerance (handles roofs, porches, eaves, facades)
+    const boundsMatch = buildings.find((b) => {
+      if (b.bounds) {
+        const minX = Math.min(b.bounds[0], b.bounds[1]) - 3.5
+        const maxX = Math.max(b.bounds[0], b.bounds[1]) + 3.5
+        const minY = Math.min(b.bounds[2], b.bounds[3]) - 3.5
+        const maxY = Math.max(b.bounds[2], b.bounds[3]) + 3.5
+        return minX <= blenderX && blenderX <= maxX && minY <= blenderY && blenderY <= maxY
+      }
+      return false
+    })
+
+    if (boundsMatch) {
+      get().selectBuilding(boundsMatch.id)
+      return boundsMatch
+    }
+
+    // 3. Proximity match: find building whose 2D boundary is closest to click point (within 22m)
+    let bestBldg: Building | null = null
+    let minBoxDist = 22.0
+
+    for (const b of buildings) {
+      if (b.bounds) {
+        const minX = Math.min(b.bounds[0], b.bounds[1])
+        const maxX = Math.max(b.bounds[0], b.bounds[1])
+        const minY = Math.min(b.bounds[2], b.bounds[3])
+        const maxY = Math.max(b.bounds[2], b.bounds[3])
+        const dx = Math.max(minX - blenderX, 0, blenderX - maxX)
+        const dy = Math.max(minY - blenderY, 0, blenderY - maxY)
+        const dist = Math.hypot(dx, dy)
+        if (dist < minBoxDist) {
+          minBoxDist = dist
+          bestBldg = b
+        }
+      }
+    }
+
+    if (bestBldg) {
+      get().selectBuilding(bestBldg.id)
+      return bestBldg
+    }
+
+    // 4. Centroid proximity fallback within 25 meters
+    let nearestBuilding: Building | null = null
+    let nearestDistSq = 25 * 25
+
+    for (const b of buildings) {
+      const cx = b.center ? b.center[0] : b.bounds ? (b.bounds[0] + b.bounds[1]) / 2 : null
+      const cy = b.center ? b.center[1] : b.bounds ? (b.bounds[2] + b.bounds[3]) / 2 : null
+      if (cx != null && cy != null) {
+        const dx = cx - blenderX
+        const dy = cy - blenderY
+        const dSq = dx * dx + dy * dy
+        if (dSq < nearestDistSq) {
+          nearestDistSq = dSq
+          nearestBuilding = b
+        }
+      }
+    }
+
+    if (nearestBuilding) {
+      get().selectBuilding(nearestBuilding.id)
+      return nearestBuilding
+    }
+
+    // 5. Query backend spatial lookup with Blender (x, y) if available
     try {
       const bldg = await getBuildingLookup(blenderX, blenderY)
       if (bldg) {
@@ -213,6 +278,7 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
       selectedUnitId: null,
       selectedInfra: null,
       underConstructionMessage: null,
+      lastSelectTime: Date.now(),
     }),
   selectFloor: (id) =>
     set({
