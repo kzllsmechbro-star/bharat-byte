@@ -122,15 +122,15 @@ Clicking any building in the 3D scene allows users to launch the **ULPIN Propert
 │         GOVERNMENT OF INDIA • MINISTRY OF RURAL DEVELOPMENT            │
 │         BHU-AADHAAR 3D CADASTRAL CERTIFICATE & PROPERTY DEED           │
 ├────────────────────────────────────────────────────────────────────────┤
-│ [QR Code]   Certificate ID: IN-3D-ULPIN-29KAKE-B01-49281              │
+│ [QR Code]   Certificate ID: IN-3D-ULPIN-29KAKE-B01-49281               │
 │             State: Karnataka (29) | Locality: Chamrajpet (560018)      │
 │             Base ULPIN: 29KAKE5YSQVHEL | Building: B01                 │
 ├────────────────────────────────────────────────────────────────────────┤
-│ 1. SPATIAL CADASTRE & GEODETIC ATTRIBUTES                             │
-│    - Planimetric Area: 264.1 m² (Shoelace Formula)                    │
+│ 1. SPATIAL CADASTRE & GEODETIC ATTRIBUTES                              │
+│    - Planimetric Area: 264.1 m² (Shoelace Formula)                     │
 │    - True Perimeter: 68.4 m | Height: 16.0 m | Stories: 5              │
 │    - 3D Volumetric Airspace: 4,225.6 m³                                │
-│    - 3D Morton Spatial Code: 036FC722 (Z-Order Space-Filling Curve)   │
+│    - 3D Morton Spatial Code: 036FC722 (Z-Order Space-Filling Curve)    │
 │    - Cryptographic Spatial Hash: 0x06F3DEADBEEF... (Tamper-Proof)      │
 ├────────────────────────────────────────────────────────────────────────┤
 │ 2. SUBTERRANEAN INFRASTRUCTURE CLEARANCE AUDIT                         │
@@ -139,7 +139,7 @@ Clicking any building in the 3D scene allows users to launch the **ULPIN Propert
 │    - Stormwater Drainage Culvert: 18.5m (Compliant)                    │
 │    - Underground High Voltage Power Duct: 22.0m (Compliant)            │
 ├────────────────────────────────────────────────────────────────────────┤
-│ 3. VERTICAL PROPERTY & UNIT SCHEDULE (FLOOR-BY-FLOOR)                 │
+│ 3. VERTICAL PROPERTY & UNIT SCHEDULE (FLOOR-BY-FLOOR)                  │
 │    - Floor F001 [0.0m - 3.5m]: Units U001, U002, U003                  │
 │    - Floor F002 [3.5m - 7.0m]: Units U001, U002, U003                  │
 │    - Floor F003 [7.0m - 10.5m]: Units U001, U002, U003                 │
