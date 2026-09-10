@@ -1,6 +1,5 @@
 /* oxlint-disable react(set-state-in-effect) -- selection loading state is intentionally immediate. */
 import { useEffect, useState, useMemo } from 'react'
-import QRCode from 'qrcode'
 import { useLocalityStore } from '../store/localityStore'
 import { getBuildingFloors, getFloorUnits } from '../api/client'
 import type { Floor, Unit } from '../types/spatial'
@@ -30,7 +29,7 @@ export function UlpinDocumentModal() {
   const [units, setUnits] = useState<Unit[]>([])
   const [isLoadingDetails, setIsLoadingDetails] = useState(false)
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
-  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('')
+
   const [copied, setCopied] = useState(false)
 
   // Fetch floors and units for this specific building when modal opens
@@ -136,31 +135,6 @@ export function UlpinDocumentModal() {
     }
   }, [building, floors, undergroundInfra])
 
-  // Generate dynamic QR Code for this specific property
-  useEffect(() => {
-    if (!building || !metrics) return
-
-    const qrPayload = JSON.stringify({
-      reg: 'BHU-AADHAAR-3D',
-      ulpin: metrics.full3DUlpin,
-      base: building.base_ulpin,
-      bldg: building.building_code,
-      house: building.house_no ?? null,
-      area: `${metrics.areaM2}m2`,
-      stories: metrics.storiesCount,
-      height: `${metrics.heightM}m`,
-      hash: metrics.spatialHash,
-      cert: metrics.certId,
-    })
-
-    QRCode.toDataURL(qrPayload, {
-      margin: 1,
-      width: 160,
-      color: { dark: '#0f172a', light: '#ffffff' },
-    })
-      .then(setQrCodeDataUrl)
-      .catch((err: unknown) => console.error('Failed to generate QR', err))
-  }, [building, metrics])
 
   // Escape key listener to close modal
   useEffect(() => {
@@ -337,14 +311,7 @@ export function UlpinDocumentModal() {
                 </div>
               </div>
 
-              <div className="hero-qr">
-                {qrCodeDataUrl ? (
-                  <img src={qrCodeDataUrl} alt="3D ULPIN Verification QR" className="cert-qr-img" />
-                ) : (
-                  <div className="qr-placeholder" />
-                )}
-                <span className="qr-caption">Scan to Verify 3D Record</span>
-              </div>
+
             </section>
 
             {/* 1. Property Identity & Address Table */}

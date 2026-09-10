@@ -1,5 +1,4 @@
 import { jsPDF } from 'jspdf'
-import QRCode from 'qrcode'
 import type { Building, Floor, UndergroundInfra, Unit } from '../types/spatial'
 import {
   calculateBoundingDimensions,
@@ -50,35 +49,6 @@ export async function generateUlpinPdf(data: UlpinDocumentData): Promise<void> {
     hour12: true,
   })
 
-  // Dynamic QR code payload
-  const qrPayload = JSON.stringify({
-    registry: 'BHU-AADHAAR-3D-CADASTRE',
-    base_ulpin: building.base_ulpin,
-    building_code: building.building_code,
-    full_3d_ulpin: full3DUlpin,
-    house_no: building.house_no ?? null,
-    structure: building.structure_category ?? building.building_type,
-    area_m2: areaM2,
-    height_m: heightM,
-    stories: storiesCount,
-    spatial_hash: spatialHash,
-    cert_id: certId,
-  })
-
-  let qrDataUrl = ''
-  try {
-    qrDataUrl = await QRCode.toDataURL(qrPayload, {
-      errorCorrectionLevel: 'M',
-      margin: 1,
-      width: 140,
-      color: {
-        dark: '#0f172a',
-        light: '#ffffff',
-      },
-    })
-  } catch (err) {
-    console.error('[ULPIN PDF] Failed to generate QR code', err)
-  }
 
   // ── 1. Security Frame & Background Accents ──────────────────────────────
   doc.setDrawColor(30, 41, 59) // slate-800
@@ -146,10 +116,6 @@ export async function generateUlpinPdf(data: UlpinDocumentData): Promise<void> {
   doc.text(`SURFACE BASE ULPIN: ${building.base_ulpin}`, 16, heroY + 18)
   doc.text(`BUILDING CODE: ${building.building_code}    |    REGISTRY ID: ${certId}`, 16, heroY + 23)
 
-  // Right Block: QR Code
-  if (qrDataUrl) {
-    doc.addImage(qrDataUrl, 'PNG', pageWidth - 37, heroY + 2.5, 23, 23)
-  }
 
   // ── 4. Property & Structure Specification Table ─────────────────────────
   let cursorY = 70
