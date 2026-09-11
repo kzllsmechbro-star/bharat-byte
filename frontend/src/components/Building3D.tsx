@@ -227,7 +227,7 @@ export function Building3D({ building }: { building: Building; index?: number })
                   anchor={anchor}
                   elevation={elevation}
                   onSelect={() => {
-                    selectBuilding(building.id, floor.id)
+                    selectBuilding(building.id, floor.id, false)
                     selectFloor(floor.id)
                   }}
                   undergroundVisible={undergroundVisible}

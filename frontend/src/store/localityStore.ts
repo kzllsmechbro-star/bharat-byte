@@ -70,7 +70,7 @@ interface LocalityState {
   closeDocumentModal: () => void
 
   loadInitialData: () => Promise<void>
-  selectBuilding: (id: string | null, defaultFloorId?: string | null) => void
+  selectBuilding: (id: string | null, defaultFloorId?: string | null, shouldFly?: boolean) => void
   setHoveredBuildingId: (id: string | null) => void
   selectFloor: (id: string | null) => void
   setHoveredFloorId: (id: string | null) => void
@@ -95,6 +95,108 @@ interface LocalityState {
   toggleRealTime: () => void
   setWeatherMode: (mode: WeatherMode) => void
   toggleExplodedView: () => void
+}
+
+/**
+ * Calculates a camera focal point and distance so that the home / building
+ * perfectly fits and frames inside the 3D viewport.
+ *
+ * Uses camera vertical FOV (46°) and viewport aspect ratio to compute the exact
+ * 3D distance needed so the building occupies ~65% of the viewport (leaving
+ * comfortable breathing margins around the roof and foundation).
+ */
+export function getBuildingFocusPose(
+  building: Building,
+  currentCamPos?: [number, number, number] | null,
+): { target: [number, number, number]; position: [number, number, number] } {
+  let sceneX = 0
+  let sceneZ = 0
+
+  if (building.center && building.center.length >= 2) {
+    sceneX = building.center[0]
+    sceneZ = -building.center[1]
+  } else if (building.bounds && building.bounds.length >= 4) {
+    sceneX = (building.bounds[0] + building.bounds[1]) / 2
+    sceneZ = -(building.bounds[2] + building.bounds[3]) / 2
+  } else if (building.footprint) {
+    const center = getPolygonCenter(building.footprint)
+    const sp = localXYToScene(center)
+    sceneX = sp.x
+    sceneZ = sp.z
+  }
+
+  // Determine physical dimensions
+  let width = 11
+  let depth = 8
+  if (building.bounds && building.bounds.length >= 4) {
+    width = Math.max(6, Math.abs(building.bounds[1] - building.bounds[0]))
+    depth = Math.max(6, Math.abs(building.bounds[3] - building.bounds[2]))
+  }
+  const height = building.height_meters || ((building.stories_count || 1) * 3.5) || 4.2
+
+  // Center vertical target at exact mid-height of building so it is centered on screen
+  const targetY = height / 2
+  const target: [number, number, number] = [sceneX, targetY, sceneZ]
+
+  // Dynamic pitch angle tailored to building scale:
+  // - Low-rise homes (<= 12m): 24° tilt to showcase roofs and entrances
+  // - Mid-rise (12m - 40m): 20° tilt
+  // - High-rise towers & skyscrapers (> 40m): 16° tilt to frame full height from ground to crown
+  let pitchDeg = 24
+  if (height > 40) {
+    pitchDeg = 16
+  } else if (height > 12) {
+    pitchDeg = 20
+  }
+  const pitchRad = (pitchDeg * Math.PI) / 180
+  const cosPitch = Math.cos(pitchRad)
+  const sinPitch = Math.sin(pitchRad)
+
+  // Apparent vertical dimension taking pitch perspective into account:
+  // vertical height + horizontal depth projection
+  const apparentHeight = height * cosPitch + depth * sinPitch
+
+  // Apparent horizontal dimension allowing for oblique corner viewing angles
+  const apparentWidth = Math.max(width, depth, Math.hypot(width, depth) * 0.72)
+
+  // Desired viewport fill ratio: building occupies ~62% of screen height/width
+  // Leaves comfortable margins around the building so the entire structure is 100% visible
+  const TARGET_FILL_RATIO = 0.62
+  const tanHalfFov = Math.tan((46 / 2) * (Math.PI / 180)) // FOV is 46 deg
+  const effectiveAspect = 1.30 // accounts for HUD panels (~380px)
+
+  // Required 3D distances for vertical and horizontal framing
+  const distForHeight = apparentHeight / (2 * tanHalfFov * TARGET_FILL_RATIO)
+  const distForWidth = apparentWidth / (2 * tanHalfFov * effectiveAspect * TARGET_FILL_RATIO)
+
+  // Distance needed so the entire building (from 4m house to 130m skyscraper) fits completely in the viewport
+  const fitDistance = Math.max(12, Math.min(800, Math.max(distForHeight, distForWidth)))
+
+  // Split into ground plane offset and elevation
+  const distXZ = fitDistance * cosPitch
+  const distY = fitDistance * sinPitch
+
+  // Approach direction: preserve current user viewing angle if available
+  let dirX = 0.7071
+  let dirZ = 0.7071
+  if (currentCamPos) {
+    const dx = currentCamPos[0] - sceneX
+    const dz = currentCamPos[2] - sceneZ
+    const curDistXZ = Math.hypot(dx, dz)
+    if (curDistXZ > 0.5) {
+      dirX = dx / curDistXZ
+      dirZ = dz / curDistXZ
+    }
+  }
+
+  const posX = sceneX + dirX * distXZ
+  const posZ = sceneZ + dirZ * distXZ
+  const posY = targetY + distY
+
+  return {
+    target,
+    position: [posX, posY, posZ],
+  }
 }
 
 export const useLocalityStore = create<LocalityState>((set, get) => ({
@@ -271,15 +373,49 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
 
   setHoveredBuildingId: (id) => set({ hoveredBuildingId: id }),
 
-  selectBuilding: (id, defaultFloorId = null) =>
-    set({
+  selectBuilding: (id, defaultFloorId = null, shouldFly = true) => {
+    if (!id) {
+      set({
+        selectedBuildingId: null,
+        selectedFloorId: null,
+        selectedUnitId: null,
+        selectedInfra: null,
+        underConstructionMessage: null,
+      })
+      return
+    }
+
+    const building = get().buildings.find((b) => b.id === id)
+    if (!building) {
+      set({
+        selectedBuildingId: id,
+        selectedFloorId: defaultFloorId,
+        selectedUnitId: null,
+        selectedInfra: null,
+        underConstructionMessage: null,
+        lastSelectTime: Date.now(),
+      })
+      return
+    }
+
+    const { target, position } = getBuildingFocusPose(building, get().cameraPosition)
+
+    set((state) => ({
       selectedBuildingId: id,
       selectedFloorId: defaultFloorId,
       selectedUnitId: null,
       selectedInfra: null,
       underConstructionMessage: null,
       lastSelectTime: Date.now(),
-    }),
+      ...(shouldFly
+        ? {
+            cameraTarget: target,
+            cameraPosition: position,
+            cameraKey: state.cameraKey + 1,
+          }
+        : {}),
+    }))
+  },
   selectFloor: (id) =>
     set({
       selectedFloorId: id,
@@ -379,11 +515,7 @@ export const useLocalityStore = create<LocalityState>((set, get) => ({
     underConstructionMessage: `Floor ${floorNumber} is under construction — no ULPIN assigned yet.`,
   }),
   flyToBuilding: (building) => {
-    const center = getPolygonCenter(building.footprint)
-    const scenePoint = localXYToScene(center)
-    const height = building.height_meters || ((building.stories_count || 1) * 3.5)
-    const target: [number, number, number] = [scenePoint.x, height / 2, scenePoint.z]
-    const position: [number, number, number] = [scenePoint.x + 36, height + 24, scenePoint.z + 36]
+    const { target, position } = getBuildingFocusPose(building, get().cameraPosition)
     set((state) => ({
       selectedBuildingId: building.id,
       selectedFloorId: null,

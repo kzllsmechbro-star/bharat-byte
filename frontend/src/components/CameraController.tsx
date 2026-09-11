@@ -82,11 +82,30 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
   useEffect(() => {
     if (cameraTarget) {
       targetVec.current.set(...cameraTarget)
-      if (cameraPosition) posVec.current.set(...cameraPosition)
+      if (cameraPosition) {
+        const dx = camera.position.x - cameraTarget[0]
+        const dz = camera.position.z - cameraTarget[2]
+        const curDistXZ = Math.hypot(dx, dz)
+        const desiredDistXZ = Math.hypot(cameraPosition[0] - cameraTarget[0], cameraPosition[2] - cameraTarget[2])
+
+        // If focusing on a building (near distance up to 900m for skyscrapers), preserve the user's current azimuth!
+        // This glides the camera straight towards the building along the user's current line of sight
+        if (curDistXZ > 0.5 && desiredDistXZ > 1.0 && desiredDistXZ < 900.0) {
+          const dirX = dx / curDistXZ
+          const dirZ = dz / curDistXZ
+          posVec.current.set(
+            cameraTarget[0] + dirX * desiredDistXZ,
+            cameraPosition[1],
+            cameraTarget[2] + dirZ * desiredDistXZ,
+          )
+        } else {
+          posVec.current.set(...cameraPosition)
+        }
+      }
       isAnimating.current = true
       animationTime.current = 0
     }
-  }, [cameraTarget, cameraPosition, cameraKey])
+  }, [cameraTarget, cameraPosition, cameraKey, camera])
 
   // Cancel fly-to when user starts any manual interaction
   useEffect(() => {
@@ -274,18 +293,22 @@ export function CameraController({ controlsRef }: { controlsRef: React.RefObject
     // 1. Fly-to animation (programmatic camera moves)
     if (isAnimating.current && controls) {
       animationTime.current += delta
-      if (animationTime.current > 1.8) {
-        // Safety timeout — never trap camera in fly-to loop
+      if (animationTime.current > 2.2) {
+        // Safety timeout — arrive exactly and finish smoothly
+        camera.position.copy(posVec.current)
+        controls.target.copy(targetVec.current)
+        controls.update()
         isAnimating.current = false
         animationTime.current = 0
       } else {
-        const damping = Math.min(1, delta * 4.5)
+        const damping = Math.min(1, delta * 5.2)
         camera.position.lerp(posVec.current, damping)
         controls.target.lerp(targetVec.current, damping)
         controls.update()
 
+        const distThreshold = Math.max(0.25, posVec.current.distanceTo(targetVec.current) * 0.003)
         if (
-          camera.position.distanceTo(posVec.current) < 0.4 &&
+          camera.position.distanceTo(posVec.current) < distThreshold &&
           controls.target.distanceTo(targetVec.current) < 0.2
         ) {
           camera.position.copy(posVec.current)

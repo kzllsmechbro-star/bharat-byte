@@ -4,8 +4,6 @@ import { getBuilding, getBuildingFloors, searchUlpIn } from '../api/client'
 
 import type { SearchRecord } from '../types/spatial'
 import { useLocalityStore } from '../store/localityStore'
-import { getPolygonCenter } from './footprint'
-import { localXYToScene } from '../utils/coordinates'
 
 function SearchIcon() {
   return (
@@ -48,7 +46,6 @@ export function SearchBar() {
   const selectBuilding = useLocalityStore((state) => state.selectBuilding)
   const selectFloor = useLocalityStore((state) => state.selectFloor)
   const selectUnit = useLocalityStore((state) => state.selectUnit)
-  const flyToTarget = useLocalityStore((state) => state.flyToTarget)
 
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -127,25 +124,18 @@ export function SearchBar() {
     }
 
     if (matchedBuilding) {
-      const center = getPolygonCenter(matchedBuilding.footprint)
-      const scenePoint = localXYToScene(center)
-      const target: [number, number, number] = [scenePoint.x, 8, scenePoint.z]
-      const position: [number, number, number] = [scenePoint.x + 46, 40, scenePoint.z + 46]
-
       if (record.record_type === 'unit') {
         void getBuildingFloors(matchedBuilding.id).then((bFloors) => {
           const matchedFloor = bFloors.find((f) => f.floor_code === record.floor_code)
-          selectBuilding(matchedBuilding!.id, matchedFloor?.id || null)
+          selectBuilding(matchedBuilding!.id, matchedFloor?.id || null, true)
           selectUnit(record.id, matchedFloor?.id || null)
         })
       } else if (record.record_type === 'floor') {
-        selectBuilding(matchedBuilding.id, record.id)
+        selectBuilding(matchedBuilding.id, record.id, true)
         selectFloor(record.id)
       } else {
-        selectBuilding(matchedBuilding.id)
+        selectBuilding(matchedBuilding.id, null, true)
       }
-
-      flyToTarget(target, position)
     }
   }
 
