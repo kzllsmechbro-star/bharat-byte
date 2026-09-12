@@ -81,7 +81,7 @@ The cadastral database encompasses **14,768 registered buildings** covering two 
 └───────────────────────────────────────────┴────────────────────────────────────────────┘
 ```
 
-- **Residential Houses & Duplexes (10,593 buildings)**: Named using authentic traditional Karnataka home typologies (`Nilaya`, `Nivasa`, `Kuteera`, `Gruha`, `Bhavana`, `Mane`, `Nivas`, `Ashraya`, `Dhaama`, `Sannidhi`, `Sadana`, `Kuteer`) combined with 160+ historical Karnataka dynasties, sacred rivers, saints, and deities.
+- **Residential Houses & Duplexes (10,593 buildings)**: Named using authentic traditional Karnataka home typologies combined with 160+ historical Karnataka dynasties, sacred rivers, saints, and deities.
 - **Apartment Complexes (4,013 buildings)**: Named with authentic regional Karnataka residences.
 - **Commercial Complexes (162 buildings)**: Traditional Karnataka commercial and mercantile establishments.
 
