@@ -167,40 +167,81 @@ Clicking any building in the 3D scene allows users to launch the **ULPIN Propert
 
 ## 🏗️ System Architecture
 
+![Bharat Byte System Architecture](presentation/architecture_diagram.png)
+
+> **High-Resolution Vector Blueprint**: The system architecture is also available in scalable vector format ([SVG](presentation/architecture_diagram.svg)) and as an interactive viewer ([HTML](presentation/architecture_diagram.html)).
+
 ```mermaid
 graph TD
-    subgraph Data & 3D Assets
-        GLB[modular_city_environment.glb (3D Mesh)]
-        Catalog[city_buildings_catalog.json (14,768 Unique Buildings)]
-        Underground[underground_infra.json (Subterranean Utilities)]
+    classDef client fill:#0f172a,stroke:#0284c7,stroke-width:2px,color:#f8fafc;
+    classDef state fill:#0f172a,stroke:#8b5cf6,stroke-width:2px,color:#f8fafc;
+    classDef backend fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
+    classDef data fill:#0f172a,stroke:#f59e0b,stroke-width:2px,color:#f8fafc;
+    classDef statutory fill:#0f172a,stroke:#f43f5e,stroke-width:2px,color:#f8fafc;
+
+    subgraph L1["Layer 1: Client & 3D Immersive Presentation (React 18 + Three.js)"]
+        UI["Cadastral HUD & Search (14,768 Unique Names)"]:::client
+        WebGL["WebGL Viewport: ModularCityModel (254k Verts)"]:::client
+        B3D["Building3D: Parametric Floor Strata & Airspace"]:::client
+        UndergroundUI["UndergroundLayer: Utilities & Metro Corridors"]:::client
+        Camera["CameraController: Scale-Adaptive Framing (46° FOV)"]:::client
+        PDF["jsPDF: A4 Bhu-Aadhaar 3D Cadastral Deed & QR Seal"]:::client
     end
 
-    subgraph Backend Engine (FastAPI)
-        FastAPI[FastAPI REST Server (:8000)]
-        ULPINEngine[ULPIN 3D Engine & Topology Validator]
-        SpatialService[Spatial Service]
-        FastAPI --> SpatialService
-        SpatialService --> ULPINEngine
-        SpatialService --> Catalog
+    subgraph L2["Layer 2: Client State & Geometric Computation"]
+        Store["Zustand Store: localityStore.ts (Single Source of Truth)"]:::state
+        HalfEdge["Planar Half-Edge Euler Traversal (99.67% 1:1 Match)"]:::state
+        Projection["Perspective Projection & Distance Solver (4m to 800m)"]:::state
     end
 
-    subgraph Frontend Application (React 18 + Vite + Three.js)
-        Store[Zustand localityStore]
-        Canvas[R3F 3D WebGL Canvas]
-        CityMesh[ModularCityModel (3D City)]
-        BuildingHighlight[Building3D (Floor Slices & Highlight)]
-        PDFGen[jsPDF Document Generator]
-        UI[HUD Panels & Info Drawer]
-
-        Store --> Canvas
-        Store --> UI
-        Canvas --> CityMesh
-        Canvas --> BuildingHighlight
-        UI --> PDFGen
-        GLB --> CityMesh
+    subgraph L3["Layer 3: Microservices Backend & Spatial Analytics (FastAPI)"]
+        Gateway["FastAPI Async Gateway (:8000)"]:::backend
+        Schema["Deterministic 3D ULPIN: BASE(14)-Bxx-Fxxx-Uxxx"]:::backend
+        Shoelace["Planimetric Shoelace Surveyor Math (Area & Perimeter)"]:::backend
+        Airspace["Volumetric Airspace Envelope (Volume = Area × Height)"]:::backend
+        Morton["3D Z-Order Morton Space-Filling Curve (Bit Interleaving)"]:::backend
+        Crypto["Cryptographic Spatial Hash (128-bit SHA-256 Digital Seal)"]:::backend
+        Clearance["Subterranean Clearance Auditor (5 Utility Buffers)"]:::backend
     end
 
-    Backend Engine <--> Frontend Application
+    subgraph L4["Layer 4: Spatial Data Repository & Cadastral Storage"]
+        Catalog["city_buildings_catalog.json (14,768 Parcels, 56.4MB)"]:::data
+        GLB["modular_city_environment.glb (Binary glTF, 10.9MB)"]:::data
+        InfraData["underground_infra.json (Water, Sewer, Metro GeoJSON)"]:::data
+        PostGIS["PostgreSQL + PostGIS (ST_3DIntersects, R-Tree, RLS)"]:::data
+    end
+
+    subgraph L5["Layer 5: Statutory Compliance & Civic Integrations"]
+        DoLR["MoRD / DoLR Bhu-Aadhaar National Standard"]:::statutory
+        NBC["National Building Code 2016 (IS 456 / IS 1893)"]:::statutory
+        Civic["Municipal Tax (BBMP) & Bank Mortgage Underwriting"]:::statutory
+        Field["Surveyor Mobile Field Verification (ISO/IEC 18004 QR)"]:::statutory
+    end
+
+    %% Data Connections
+    UI <--> Store
+    Store --> Camera
+    Store --> B3D
+    Store --> WebGL
+    Store --> UndergroundUI
+    GLB --> HalfEdge
+    HalfEdge --> B3D
+    Store --> PDF
+    Store <==>|"REST API / Spatial JSON"| Gateway
+    Gateway --> Schema
+    Gateway --> Shoelace
+    Gateway --> Airspace
+    Gateway --> Morton
+    Gateway --> Crypto
+    Gateway --> Clearance
+    Catalog --> Store
+    InfraData --> UndergroundUI
+    Clearance <--> PostGIS
+    PDF --> Field
+    Schema -.-> DoLR
+    Airspace -.-> NBC
+    Clearance -.-> NBC
+    PDF -.-> Civic
 ```
 
 ---
