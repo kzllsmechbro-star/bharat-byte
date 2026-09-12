@@ -65,58 +65,6 @@ Parcel (BASE-ULPIN: 14 chars)
 
 ---
 
-## 🏗️ System Architecture
-
-The architecture is designed around a **4-step end-to-end data processing pipeline** that bridges ground-level land administration with browser-based 3D digital twins:
-
-![Bharat Byte System Architecture](presentation/architecture_diagram.png)
-
-> **High-Resolution Vector Blueprint**: The architecture is also available in scalable vector format ([SVG](https://github.com/kzllsmechbro-star/bharat-byte/blob/main/presentation/architecture_diagram.svg)) and as an interactive browser viewer ([HTML](https://github.com/kzllsmechbro-star/bharat-byte/blob/main/presentation/architecture_diagram.html)).
-
-```mermaid
-graph TD
-    classDef client fill:#0f172a,stroke:#0284c7,stroke-width:2px,color:#f8fafc;
-    classDef graphics fill:#0f172a,stroke:#8b5cf6,stroke-width:2px,color:#f8fafc;
-    classDef backend fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
-    classDef civic fill:#0f172a,stroke:#f59e0b,stroke-width:2px,color:#f8fafc;
-
-    subgraph S1["1. USER INTERFACE (React 18 + Vite)"]
-        Twin["🖥️ Web 3D Digital Twin (Zero Plugins, 100% Offline)"]:::client
-        Search["🔍 Smart Search (14,768 Unique Names Autocomplete)"]:::client
-        HUD["🎛️ Layer Visibility HUD (Sky, Wireframes, Utilities)"]:::client
-        PDF["📄 1-Click Digital Deed (A4 PDF + ISO/IEC 18004 QR)"]:::client
-    end
-
-    subgraph S2["2. 3D VISUALIZATION ENGINE (Three.js + R3F)"]
-        CityMesh["🏙️ Realistic 3D City Mesh (254,114 Vertices, 127k Faces)"]:::graphics
-        Camera["📸 Smart Auto-Framing Camera (Scale-Adaptive Zoom)"]:::graphics
-        Slices["🏢 Parametric Floor Slicing (Unit-Level Extrusion)"]:::graphics
-        Infra3D["🚇 Sub-Surface Drainage Pipelines & Safety Clearance Spheres"]:::graphics
-    end
-
-    subgraph S3["3. 3D ULPIN BACKEND ENGINE (FastAPI / Python)"]
-        Generator["🏷️ 3D ULPIN ID Generator (BASE-Bxx-Fxxx-Uxxx)"]:::backend
-        Shoelace["📐 Shoelace Polygon Area (m²) & Airspace Volume (m³)"]:::backend
-        Safety["🛡️ Subterranean Safety Auditor (Drainage Pipe Buffer Check)"]:::backend
-        Crypto["🔒 Cryptographic Hash (128-bit SHA-256 Tamper Seal)"]:::backend
-    end
-
-    subgraph S4["4. REAL-WORLD CIVIC IMPACT & STANDARDS"]
-        DoLR["🏛️ MoRD / DoLR Bhu-Aadhaar Compliance & NBC 2016"]:::civic
-        Tax["💰 Fair Municipal Property Tax (BBMP Unit Unbundling)"]:::civic
-        Mortgage["🏦 Fraud-Free Bank Mortgages & Unbundled Titles"]:::civic
-        FirstResp["🚒 First-Responder Emergency Access & Surveyor QR Scan"]:::civic
-    end
-
-    %% Pipeline Flow
-    S1 ==>|"1. User clicks parcel / floor"| S2
-    S2 ==>|"2. REST API / Spatial Queries"| S3
-    S3 ==>|"3. Verified Deeds & Tax Records"| S4
-```
-
----
-
-
 ## 🏙️ Locality Coverage & Unique Cadastral Registry
 
 The cadastral database encompasses **14,768 registered buildings** covering two of Bengaluru's most prominent urban sectors, each assigned a **strictly unique Karnataka name with zero repetition**:
