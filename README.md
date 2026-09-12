@@ -17,7 +17,7 @@
 India's **Bhu-Aadhaar (Unique Land Parcel Identification Number — ULPIN)**, instituted by the **Department of Land Resources (DoLR), Ministry of Rural Development**, assigns a 14-digit alphanumeric identifier to land parcels based on their 2D geographic coordinates. While this standard functions effectively for flat agricultural or open land, modern urban centers have rapidly expanded vertically:
 - **Multi-storey residential towers** housing hundreds of families on a single ground parcel.
 - **High-rise commercial trade centers** with multiple distinct corporate tenancies.
-- **Multi-tiered subterranean municipal infrastructure**, including potable water mains, gravity sewers, stormwater culverts, high-voltage BESCOM power ducts, and underground rapid transit (Namma Metro) tunnels.
+- **Subterranean municipal infrastructure**, including sub-surface drainage pipeline networks with statutory clearance buffers.
 
 In conventional 2D cadastre, an entire multi-storey tower shares a single surface ULPIN. This creates critical operational limitations:
 1. **Individual Title Registry**: Inability to issue clear, tamper-evident digital cadastral deeds for individual flats, duplexes, or tenements.
@@ -71,7 +71,7 @@ The architecture is designed around a **4-step end-to-end data processing pipeli
 
 ![Bharat Byte System Architecture](presentation/architecture_diagram.png)
 
-> **High-Resolution Vector Blueprint**: The architecture is also available in scalable vector format ([SVG](presentation/architecture_diagram.svg)) and as an interactive browser viewer ([HTML](presentation/architecture_diagram.html)).
+> **High-Resolution Vector Blueprint**: The architecture is also available in scalable vector format ([SVG](https://github.com/kzllsmechbro-star/bharat-byte/blob/main/presentation/architecture_diagram.svg)) and as an interactive browser viewer ([HTML](https://github.com/kzllsmechbro-star/bharat-byte/blob/main/presentation/architecture_diagram.html)).
 
 ```mermaid
 graph TD
@@ -91,13 +91,13 @@ graph TD
         CityMesh["🏙️ Realistic 3D City Mesh (254,114 Vertices, 127k Faces)"]:::graphics
         Camera["📸 Smart Auto-Framing Camera (Scale-Adaptive Zoom)"]:::graphics
         Slices["🏢 Parametric Floor Slicing (Unit-Level Extrusion)"]:::graphics
-        Infra3D["🚇 Sub-Surface Utility Pipes & Safety Clearance Spheres"]:::graphics
+        Infra3D["🚇 Sub-Surface Drainage Pipelines & Safety Clearance Spheres"]:::graphics
     end
 
     subgraph S3["3. 3D ULPIN BACKEND ENGINE (FastAPI / Python)"]
         Generator["🏷️ 3D ULPIN ID Generator (BASE-Bxx-Fxxx-Uxxx)"]:::backend
         Shoelace["📐 Shoelace Polygon Area (m²) & Airspace Volume (m³)"]:::backend
-        Safety["🛡️ Subterranean Safety Auditor (5 Utility Buffer Checks)"]:::backend
+        Safety["🛡️ Subterranean Safety Auditor (Drainage Pipe Buffer Check)"]:::backend
         Crypto["🔒 Cryptographic Hash (128-bit SHA-256 Tamper Seal)"]:::backend
     end
 
@@ -116,30 +116,6 @@ graph TD
 
 ---
 
-## 🎥 Scale-Adaptive 3D Camera & Auto-Framing Engine
-
-One of the system's core innovations is its **scale-adaptive perspective auto-framing engine** ([CameraController.tsx](file:///frontend/src/components/CameraController.tsx) & [localityStore.ts](file:///frontend/src/store/localityStore.ts)):
-
-### 1. Trigonometric Perspective Projection
-Earlier implementations used hardcoded distances or flat caps (e.g. 80m), which caused skyscrapers like *Shambhavi Samruddhi Trade Center* (130m / 37 levels) to be severely clipped. The engine now dynamically solves for optimal camera distance using trigonometric perspective projection based on the camera's $46^\circ$ vertical field-of-view:
-
-$$D = \frac{\max(H_{\text{apparent}}, W_{\text{apparent}})}{2 \cdot \tan\left(\frac{\text{FOV}}{2}\right) \cdot \text{FillRatio}}$$
-
-$$\text{where } \tan\left(\frac{46^\circ}{2}\right) = \tan(23^\circ) \approx 0.42447, \quad \text{FillRatio} = 0.62$$
-
-### 2. Apparent Dimensions Under Camera Pitch
-Under camera pitch angle $\theta$, the apparent vertical height projected onto the viewport is:
-
-$$H_{\text{apparent}} = H \cdot \cos(\theta) + D_{\text{depth}} \cdot \sin(\theta)$$
-
-### 3. Dynamic Pitch & Symmetrical Centering
-- **Commercial Skyscrapers ($>40\text{m}$)**: Uses a shallow pitch of $16^\circ$ to prevent vertical perspective keystoning.
-- **Mid-Rise Apartments ($15\text{m} - 40\text{m}$)**: Uses $20^\circ$ pitch.
-- **Low-Rise Cottages ($<15\text{m}$)**: Uses $24^\circ$ pitch for a clear roof and parcel view.
-- **Symmetric Center**: Camera `lookAt` target is fixed at $Y = \frac{\text{Height}}{2}$, centering the entire structure vertically within the viewport.
-- **Azimuth Preservation**: Preserves the user's line-of-sight approach angle up to 900m distance for seamless cinematic fly-to lerping.
-
----
 
 ## 🏙️ Locality Coverage & Unique Cadastral Registry
 
@@ -157,15 +133,9 @@ The cadastral database encompasses **14,768 registered buildings** covering two 
 └───────────────────────────────────────────┴────────────────────────────────────────────┘
 ```
 
-- **Residential Houses & Duplexes (10,593 buildings)**:
-  Named using authentic traditional Karnataka home typologies (`Nilaya`, `Nivasa`, `Kuteera`, `Gruha`, `Bhavana`, `Mane`, `Nivas`, `Ashraya`, `Dhaama`, `Sannidhi`, `Sadana`, `Kuteer`) combined with 160+ historical Karnataka dynasties, sacred rivers, saints, and deities:
-  e.g., `Sri Raghavendra Prasanna Nilaya`, `Basaveshwara Prasanna Nilaya`, `Sharadamba Prasanna Nilaya`, `Chamundeshwari Prasanna Nilaya`, `Kaveri Paramananda Nivasa`, `Hoysala Samruddhi Kuteera`, `Kadamba Ashirwada Bhavana`.
-- **Apartment Complexes (4,013 buildings)**:
-  Named with authentic regional Karnataka residences:
-  e.g., `Sharadamba Vaibhava Residency Block B`, `Bhima Vaibhava Residency Block D`, `Kumudvathi Prasanna Residency Block C`, `Hoysala Siri Residency Block E`, `Kuvempu Paramananda Residency Block B`.
-- **Commercial Complexes (162 buildings)**:
-  Traditional Karnataka commercial and mercantile establishments:
-  e.g., `Vanijya Soudha`, `Vyapara Kendra`, `Vanijya Complex`, `Vyavahara Bhavan`, `Vardhana Complex`, `Udyoga Soudha`, `Shambhavi Samruddhi Trade Center`.
+- **Residential Houses & Duplexes (10,593 buildings)**: Named using authentic traditional Karnataka home typologies (`Nilaya`, `Nivasa`, `Kuteera`, `Gruha`, `Bhavana`, `Mane`, `Nivas`, `Ashraya`, `Dhaama`, `Sannidhi`, `Sadana`, `Kuteer`) combined with 160+ historical Karnataka dynasties, sacred rivers, saints, and deities.
+- **Apartment Complexes (4,013 buildings)**: Named with authentic regional Karnataka residences.
+- **Commercial Complexes (162 buildings)**: Traditional Karnataka commercial and mercantile establishments.
 
 > **100% Strict Uniqueness Guarantee**: Verified via programmatic set assertions across all 14,768 records, eliminating duplicate names.
 
@@ -188,16 +158,12 @@ The system extracts building footprints directly from the **3D City Environment 
 
 ## 🚇 Subterranean Infrastructure & Safety Clearance Audit
 
-Beneath the city surface, Bharat Byte maps 5 distinct municipal infrastructure networks ([UndergroundLayer.tsx](file:///frontend/src/components/UndergroundLayer.tsx)):
-1. **Potable Water Mains**: 12.3m depth, 10m statutory buffer.
-2. **Gravity Sewer Trunk**: 14.8m depth, 12m statutory buffer.
-3. **Stormwater Drainage Culverts**: 18.5m depth, 15m statutory buffer.
-4. **BESCOM High-Voltage Power Ducts**: 22.0m depth, 20m statutory buffer.
-5. **Namma Metro Transit Corridors**: 28.0m depth, 25m statutory buffer.
+Beneath the city surface, Bharat Byte maps the municipal drainage pipeline network ([UndergroundLayer.tsx](frontend/src/components/UndergroundLayer.tsx)):
+- **Stormwater & Drainage Pipelines**: Road-aligned sub-surface culverts mapped with statutory municipal clearance buffers to safeguard building foundations against flooding and water ingress.
 
 ### Real-Time Foundation Distance Calculation:
 $$d = \min_{i} \left( \sqrt{(x_f - x_{u,i})^2 + (y_f - y_{u,i})^2 + (z_f - z_{u,i})^2} \right)$$
-The system audits whether building foundation piles violate minimum legal safety clearances and flags non-compliant structures in the property inspector HUD.
+The system audits whether building foundation piles violate minimum legal safety clearances to drainage pipelines and flags non-compliant structures in the property inspector HUD.
 
 ---
 
@@ -222,10 +188,8 @@ Clicking any building in the 3D scene allows users to launch the **ULPIN Propert
 │    - Cryptographic Spatial Hash: 0x06F3DEADBEEF... (Tamper-Proof)      │
 ├────────────────────────────────────────────────────────────────────────┤
 │ 2. SUBTERRANEAN INFRASTRUCTURE CLEARANCE AUDIT                         │
-│    - Potable Water Main: 12.3m (Compliant - Safe Buffer)               │
-│    - Gravity Sewer Trunk: 14.8m (Compliant - Safe Buffer)              │
-│    - Stormwater Drainage Culvert: 18.5m (Compliant)                    │
-│    - Underground High Voltage Power Duct: 22.0m (Compliant)            │
+│    - Stormwater Drainage Culvert: 18.5m (Compliant - Safe Buffer)      │
+│    - Statutory Municipal Clearance Status: Verified Compliant          │
 ├────────────────────────────────────────────────────────────────────────┤
 │ 3. VERTICAL PROPERTY & UNIT SCHEDULE (FLOOR-BY-FLOOR)                  │
 │    - Floor F001 [0.0m - 3.5m]: Units U001, U002, U003                  │
@@ -269,10 +233,10 @@ ulpin-3d-system/
 │       │   ├── SatelliteTerrain.tsx     # Base terrain plane with raycasting
 │       │   ├── SceneErrorBoundary.tsx   # React 3D error boundary
 │       │   ├── SearchBar.tsx            # Autocomplete cadastral search
-│       │   ├── SubterraneanPanel.tsx    # Sub-surface utility drawer
+│       │   ├── SubterraneanPanel.tsx    # Sub-surface drainage controls
 │       │   ├── UlpinDocumentModal.tsx   # Interactive ULPIN Certificate modal viewer
 │       │   ├── UlpinInfoPanel.tsx       # Property inspector & metadata drawer
-│       │   ├── UndergroundLayer.tsx     # Subterranean pipelines & metro network
+│       │   ├── UndergroundLayer.tsx     # Subterranean drainage pipeline network
 │       │   ├── Unit3D.tsx               # Internal flat & unit 3D extrusion
 │       │   └── ViewPanel.tsx            # View mode switcher
 │       ├── data/                # Procedural road and drainage GeoJSON data
